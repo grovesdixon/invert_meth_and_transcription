@@ -1,0 +1,787 @@
+3/44
+4/44
+5/44
+4273890/9954637
+setwd("~/gitreps/reciprocal_transplant_methylationV2/cpg_polymorphism")#
+#READ IN CPG COUNT DATA#
+#
+cdat = read.table("all_cpg_counts.tsv", sep="\t", header = T, stringsAsFactors=F)#
+colony.id = sub("_genes.fa", "", cdat$fileName)#
+cdat$colony = colony.id#
+cdat$ori = substr(start=1, stop=1, colony.id)#
+cdat$tNuc = cdat$nA + cdat$nT + cdat$nG + cdat$nC  #chose not to include Ns#
+cdat$cpg.density = cdat$nCpG / cdat$tNuc#
+head(cdat)
+hist(cdat$cpg.density)
+#GET AVERAGES BY ORIGIN#
+k=cdat[cdat$ori=='K',]#
+o=cdat[cdat$ori=='O',]#
+mk = tapply(k$cpg.density, INDEX=k$seq, mean)#
+mo = tapply(o$cpg.density, INDEX=o$seq, mean)#
+sum(names(mk)==names(mo))==length(mk)#
+mns = data.frame('k'=mk, 'o'=mo)#
+plot(mns$k~mns$o)#
+sum(mns$k==mns$o) == nrow(mns)#
+rat = data.frame('gene' = rownames(mns), 'cpg.ratio' = mns$o / mns$k)
+sum(mns$k==mns$o) == nrow(mns)
+head(rat)
+plot(rat$cpg.ratio)
+plot(density(rat$cpg.ratio))
+plot(density(rat$cpg.ratio, na.omit=T))
+plot(density(rat$cpg.ratio, na.rm=T))
+head(rat)
+rat$log.rat = log(rat$cpg.ratio, 2)
+plot(density(rat$log.rat, na.rm=T))
+plot(density(rat$log.rat, na.rm=T), main="CpG Density (O:K)")
+plot(density(rat$log.rat, na.rm=T), main="CpG Density (O:K)", xlab=bquote(log[2]))
+plot(density(rat$log.rat, na.rm=T), main="CpG Density (O:K)", xlab=bquote(log[2]~CpG~density~"(O:K)"))
+#LOAD THE ORIGIN DIFFERENCES#
+ll=load("../datasets/orico_GENEBODIES_FULLGENE.Rdata")#
+orico$gene = rownames(orico)#
+head(orico)#
+mrat = merge(data.frame(orico), rat, by = 'gene')#
+mrat = mrat[!is.na(mrat$log2FoldChange) & !is.na(mrat$cpg.ratio),]
+head(mrat)
+head(rat)
+head(orico)
+orico$gene = rownames(orico)
+mrat = merge(data.frame(orico), rat, by = 'gene')
+mrat = mrat[!is.na(mrat$log2FoldChange) & !is.na(mrat$cpg.ratio),]
+plot(mrat$log2FoldChange~mrat$cpg.ratio)
+lm1=lm(mrat$log2FoldChange~mrat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')
+plot(mrat$log2FoldChange~mrat$cpg.ratio, ylab=bquote(log[2]*"MBD-fold difference (O:K)"))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, ylab=bquote(log[2]))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, ylab=bquote(log[2]))
+plot(density(rat$log.rat, na.rm=T), main="CpG Density (O:K)", xlab=bquote(log[2]~CpG~density~"(O:K)"))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, ylab=bquote(log[2]))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff' ylab=bquote(log[2]))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff')
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab='hey')
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab=bquote(hey))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab=bquote(hey~you))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab=bquote(log[2]~MBD-fold))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab=bquote(log[2]~MBD-fold~diff~"(O:K)"))
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab=bquote(log[2]~CpG~density~"(O:K)"))
+lm1=lm(mrat$log2FoldChange~mrat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')
+#look only at significant#
+cut = 0.05#
+p.type = 'pvalue'#
+srat = mrat[mrat[,p.type] < cut,]#
+plot(srat$log2FoldChange~srat$cpg.ratio, main='Significant DEGs (p < 0.05)', xlab="CpG density (O:K)", ylab="")#
+lm1=lm(srat$log2FoldChange~srat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')
+plot(srat$log2FoldChange~srat$cpg.ratio, main='Significant DMGs (p < 0.05)', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab="CpG density (O:K)", ylab="")
+plot(srat$log2FoldChange~srat$cpg.ratio, main='Significant DMGs (p < 0.05)', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab="CpG density (O:K)")
+plot(srat$log2FoldChange~srat$cpg.ratio, main='Significant DMGs (p < 0.05)', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab="CpG density (O:K)")#
+lm1=lm(srat$log2FoldChange~srat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')
+head(cdat)
+?grep
+n0 = substr(start=2, stop=10, cdat$fileName)
+head(n0)
+n0 = substr(start=2, stop=20, cdat$fileName)
+head(n0)
+?strsplit
+num = sapply(n0, function(x) strsplit(x, "_")[[1]][1])
+head(num)
+num = as.numeric(num)
+head(num)
+cdat = cdat[num < 4,]
+#GET AVERAGES BY ORIGIN#
+k=cdat[cdat$ori=='K',]#
+o=cdat[cdat$ori=='O',]#
+mk = tapply(k$cpg.density, INDEX=k$seq, mean)#
+mo = tapply(o$cpg.density, INDEX=o$seq, mean)#
+sum(names(mk)==names(mo))==length(mk)#
+mns = data.frame('k'=mk, 'o'=mo)#
+rat = data.frame('gene' = rownames(mns), 'cpg.ratio' = mns$o / mns$k)#
+rat$log.rat = log(rat$cpg.ratio, 2)
+#Look at results#
+plot(mns$k~mns$o)
+plot(density(rat$cpg.ratio, na.rm=T))
+plot(density(rat$log.rat, na.rm=T), main="CpG Density (O:K)", xlab=bquote(log[2]~CpG~density~"(O:K)"))
+#LOAD THE ORIGIN DIFFERENCES#
+ll=load("../datasets/orico_GENEBODIES_FULLGENE.Rdata")#
+orico$gene = rownames(orico)#
+head(orico)#
+mrat = merge(data.frame(orico), rat, by = 'gene')#
+mrat = mrat[!is.na(mrat$log2FoldChange) & !is.na(mrat$cpg.ratio),]#
+#
+#plot relationship#
+plot(mrat$log2FoldChange~mrat$cpg.ratio, main='MBD diff vs CpG diff', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab=bquote(log[2]~CpG~density~"(O:K)"))
+lm1=lm(mrat$log2FoldChange~mrat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')
+#look only at significant#
+cut = 0.05#
+p.type = 'pvalue'#
+srat = mrat[mrat[,p.type] < cut,]#
+plot(srat$log2FoldChange~srat$cpg.ratio, main='Significant DMGs (p < 0.05)', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab="CpG density (O:K)")#
+lm1=lm(srat$log2FoldChange~srat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')
+x=read.table("sample_mergin_input.txt")
+setwd("/Users/grovesdixon/lab_files/projects/mani_methylation/metadata/aiptasia_PRJNA415358")
+x=read.table("sample_mergin_input.txt")
+head(x)
+x=read.table("sample_mergin_input.txt", header = T)
+head(x)
+splits = sapply(x$Library_Name, "_")
+splits = sapply(x$Library_Name, function(x) strsplit(x, "_"))
+x=read.table("sample_mergin_input.txt", header = T, stringsAsFactors=F)
+head(x)#
+splits = sapply(x$Library_Name, function(x) strsplit(x, "_"))
+rep = splits[[3]]
+rep
+rep = sapply(x$Library_Name, function(x) strsplit(x, "_")[[3]][1])
+x
+head(x)
+b=x[x$Assay_Type=="Bisulfite-Seq",]
+nrow(b)
+96/12
+b
+rep = sapply(b$Library_Name, function(x) strsplit(x, "_")[[3]][1])
+rep = sapply(b$Library_Name, function(x) strsplit(x, "_")[[1]][3])
+rep
+b$rep = sapply(b$Library_Name, function(x) strsplit(x, "_")[[1]][3])
+b$lane = sapply(b$Library_Name, function(x) strsplit(x, "_")[[1]][4])
+length(unique(b$lane))
+length(unique(b$rep))
+head(b)
+reps = unique(rep)
+reps = unique(b$rep)
+reps
+?paste
+r='A4'
+sub=b[b$rep==r,]
+runs = sub$Run
+runs
+length(runs)
+runString = paste(runs, collapse=" ")
+runString
+outString = paste(paste(">", r), ".trim", sep='')
+outString
+command = paste( paste("cat", runString), outString)
+command
+f=paste(runs, "1.trim", sep="_")
+f
+rruns=paste(runs, "2.trim", sep="_")
+x=read.table("fullDatasetTestOut.tsv", header = T)
+setwd("/Users/grovesdixon/lab_files/projects/mani_methylation/learn_meth_analysis")
+x=read.table("fullDatasetTestOut.tsv", header = T)
+head(x)
+x$mpct = 100*x$meth.diff
+g=ggplot(data=x) + geom_point(aes(x=mpct, y=pvalue))
+library(ggplot)
+library(ggplot2)
+g=ggplot(data=x) + geom_point(aes(x=mpct, y=pvalue))
+plot(g)
+x$logp = -log(x$pvalue, 10)
+g=ggplot(data=x) + geom_point(aes(x=mpct, y=pvalue))
+library(cowplot)
+g=ggplot(data=x) + geom_point(aes(x=mpct, y=logp))#
+plot(g)
+x$logp = -log(x$pvalue, 10)#
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp))#
+plot(g)
+CUT=0.05
+x$sig = x$pvalue < CUT
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp))#
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=sig))
+plot(g)
+head(x)
+x$sig = x$qvalue < CUT#
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=sig))#
+plot(g)
+x$cols = 'black'
+x$cols[x$sig==TRUE]<-'red'
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=cols))#
+plot(g)
+CUT=0.1#
+x$logp = -log(x$pvalue, 10)#
+x$sig = x$qvalue < CUT#
+x$cols = 'black'#
+x$cols[x$sig==TRUE]<-'red'#
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=cols))#
+plot(g)
+CUT=0.001
+x$sig = x$pvalue < CUT#
+x$cols = 'black'#
+x$cols[x$sig==TRUE]<-'red'#
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=cols))#
+plot(g)
+CUT=0.01#
+x$logp = -log(x$pvalue, 10)#
+x$sig = x$pvalue < CUT#
+x$cols = 'black'#
+x$cols[x$sig==TRUE]<-'red'#
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=cols))#
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp, color=cols), alpha=0.1)
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp), alpha=0.25, color=x$cols)#
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp), alpha=0.25, color=x$cols) + labs(x="Methylation difference (%)")
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp), alpha=0.25, color=x$cols) + labs(x="Methylation difference (%)", y=bquote(-log[10]*pvalue))
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp), alpha=0.25, color=x$cols) + labs(x="Methylation difference (%)", y=bquote(-log[10]~pvalue))#
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp), alpha=0.25, color=x$cols) + labs(x="Methylation difference (%)", y=bquote(-log[10]~pvalue)) + theme_bw()#
+plot(g)
+g=ggplot(data=x) + geom_point(aes(x=meth.diff, y=logp), alpha=0.25, color=x$cols) + labs(x="Methylation difference (%)", y=bquote(-log[10]~pvalue)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),#
+panel.background = element_blank(), axis.line = element_line(colour = "black"))#
+plot(g)
+head(srat)
+plot(g)
+g=ggplot(data=srat) + geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2)#
+plot(g)
+g=ggplot(data=srat) + geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2) + lims(x=c(-.2,.2))
+plot(g)
+g=ggplot(data=srat) + geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2) + lims(x=c(-.2, 0.2), y=c(-2.5, 2.5))
+plot(g)
+g=ggplot(data=srat) + scatter.smooth(aes(x=log.rat, y=log2FoldChange), alpha=0.2) + lims(x=c(-.2, 0.2), y=c(-2.5, 2.5))
+g=ggplot(data=srat) + geom_smooth(aes(x=log.rat, y=log2FoldChange), alpha=0.2) + lims(x=c(-.2, 0.2), y=c(-2.5, 2.5))
+plot(g)
+g=ggplot(data=srat) + geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2) + lims(x=c(-.2, 0.2), y=c(-2.5, 2.5))
+plot(g)
+g=ggplot(data=srat) + #
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2) +#
+	geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5))#
+plot(g)
+g=ggplot(data=srat) + #
+	geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5))#
+plot(g)
+g=ggplot(data=srat) + #
+	geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+g=ggplot(data=srat) + #
+	geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2, shape=16) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.2, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.1, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	# geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.1, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+#look only at significant#
+cut = 0.1#
+p.type = 'padj'#
+srat = mrat[mrat[,p.type] < cut,]#
+plot(srat$log2FoldChange~srat$cpg.ratio, main='Significant DMGs (p < 0.05)', ylab=bquote(log[2]~MBD~fold~diff~"(O:K)"), xlab="CpG density (O:K)")#
+lm1=lm(srat$log2FoldChange~srat$cpg.ratio)#
+summary(lm1)#
+abline(lm1, col='red')#
+#
+#plot with alpha#
+g=ggplot(data=srat) + #
+	# geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.1, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	# geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.4, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x="CpG density (O:K)", y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+summary(lm1)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	# geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.4, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x=bquote(log[2]~"CpG ratio (O:K)"), y=bquote(log[2]~MBD~fold~diff~"(O:K)"))#
+plot(g)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	# geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.4, shape=16, size=0.5) +#
+	lims(x=c(-.2, 0.2), y=c(-2.5, 2.5)) +#
+	labs(x=bquote(log[2]~"CpG ratio (O:K)"), y=bquote(log[2]~MBD~ratio~"(O:K)"))#
+plot(g)
+#plot with alpha#
+g=ggplot(data=srat) + #
+	# geom_smooth(aes(x=log.rat, y=log2FoldChange)) +#
+	geom_point(aes(x=log.rat, y=log2FoldChange), alpha=0.4, shape=16, size=0.5) +#
+	lims(x=c(-2.5, 2.5), y=c(-2.5, 2.5)) +#
+	labs(x=bquote(log[2]~"CpG ratio (O:K)"), y=bquote(log[2]~MBD~ratio~"(O:K)"))#
+plot(g)
+commandFor
+setwd("/Users/grovesdixon/lab_files/projects/mani_methylation/metadata/aiptasia_PRJNA415358")#
+x=read.table("sample_mergin_input.txt", header = T, stringsAsFactors=F)#
+head(x)#
+#
+#deal with bisulfite#
+b=x[x$Assay_Type=="Bisulfite-Seq",]#
+nrow(b) #12 reps x 8 lanes#
+#
+#assign biological replicate and lane#
+b$rep = sapply(b$Library_Name, function(x) strsplit(x, "_")[[1]][3])#
+b$lane = sapply(b$Library_Name, function(x) strsplit(x, "_")[[1]][4])#
+length(unique(b$rep))  #12 replicates#
+length(unique(b$lane)) #8 lanes each#
+#
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)
+reps
+r="A4"
+sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(runs, collapse=" ")#
+	revString = paste(runs, collapse=" ")#
+	outString = paste(paste(">", r), ".trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)
+commandFor
+runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	outString = paste(paste(">", r), ".trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	outString = paste(paste(">", r), ".trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)#
+	print(commandFor)#
+	print(commandRev)#
+	writeLines(commandFor)#
+	writeLines(commandRev)#
+}
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	outString = paste(paste(">", r), ".trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)#
+	print(commandFor)#
+	print(commandRev)#
+	writeLines(commandFor, fileConn)#
+	writeLines(commandRev, fileConn)#
+}
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	outString = paste(paste(">", r), ".trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)
+close(fileConn)
+close(fileConn)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", runString), outString)#
+	commandRev = paste( paste("cat", runString), outString)#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", runString), forOut)#
+	commandRev = paste( paste("cat", runString), revOut)#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate *.trim files#
+fileConn<-file('cat_bisulfite_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+head(x)
+unique(x$Assay_Type)
+r=x[x$Assay_Type=="RNA-Seq",]
+nrow(r) #12 reps x 8 lanes
+72/12
+r$rep = sapply(r$Library_Name, function(x) strsplit(x, "_")[[1]][3])
+r$rep
+r$lane = sapply(r$Library_Name, function(x) strsplit(x, "_")[[1]][4])
+r$lane
+head(r)
+r$lane = sapply(r$Library_Name, function(x) strsplit(x, "_")[[1]][5])
+length(unique(r$rep))  #12 replicates
+length(unique(r$lane)) #8 lanes each
+r
+length(unique(r$lane)) #8 lanes each
+length(unique(r$rep))  #12 replicates
+length(unique(r$rep))  #12 replicates
+length(unique(r$lane)) #8 lanes each
+table(r$lane)
+#print catting commands to concatenate the bisulfite *.trim files#
+fileConn<-file('cat_RNA_trim_commands.txt')#
+reps = unique(r$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=r[r$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+reps
+r="A3"
+all.commands = c()
+sub=r[r$rep==r,]
+#REPEAT FOR RNASEQ#
+#
+rdf=x[x$Assay_Type=="RNA-Seq",]#
+nrow(rdf) #12 reps x 6 lanes#
+#
+#assign biological replicate and lane#
+rdf$rep = sapply(rdf$Library_Name, function(x) strsplit(x, "_")[[1]][3])#
+rdf$lane = sapply(rdf$Library_Name, function(x) strsplit(x, "_")[[1]][5])#
+length(unique(rdf$rep))  #12 replicates#
+length(unique(rdf$lane)) #4 lanes used#
+table(rdf$lane)          #have some do
+reps = unique(rdf$rep)
+reps
+#print catting commands to concatenate the bisulfite *.trim files#
+fileConn<-file('cat_RNA_trim_commands.txt')#
+reps = unique(rdf$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=rdf[rdf$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "_1.trim", sep='')#
+	revOut = paste(paste(">", r), "_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate the bisulfite *.trim files#
+fileConn<-file('cat_bisulfite_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "met_1.trim", sep='')#
+	revOut = paste(paste(">", r), "met_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+REPEAT FOR RNASEQ#
+#
+rdf=x[x$Assay_Type=="RNA-Seq",]#
+nrow(rdf) #12 reps x 6 lanes#
+#
+#assign biological replicate and lane#
+rdf$rep = sapply(rdf$Library_Name, function(x) strsplit(x, "_")[[1]][3])#
+rdf$lane = sapply(rdf$Library_Name, function(x) strsplit(x, "_")[[1]][5])#
+length(unique(rdf$rep))  #12 replicates#
+length(unique(rdf$lane)) #4 lanes used#
+table(rdf$lane)          #have some doubled up on lane 5 and 6#
+#print catting commands to concatenate the bisulfite *.trim files#
+fileConn<-file('cat_RNA_trim_commands.txt')#
+reps = unique(rdf$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=rdf[rdf$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "rna_1.trim", sep='')#
+	revOut = paste(paste(">", r), "rna_2.trim", sep='')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate the bisulfite *.trim files#
+fileConn<-file('cat_bisulfite_trim_commands.txt')#
+reps = unique(b$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=b[b$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "met_1.trim", sep='_')#
+	revOut = paste(paste(">", r), "met_2.trim", sep='_')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
+#print catting commands to concatenate the bisulfite *.trim files#
+fileConn<-file('cat_RNA_trim_commands.txt')#
+reps = unique(rdf$rep)#
+all.commands = c()#
+for (r in reps){#
+	sub=rdf[rdf$rep==r,]#
+	runs = sub$Run#
+	fruns=paste(runs, "1.trim", sep="_")#
+	rruns=paste(runs, "2.trim", sep="_")#
+	forString = paste(fruns, collapse=" ")#
+	revString = paste(rruns, collapse=" ")#
+	forOut = paste(paste(">", r), "rna_1.trim", sep='_')#
+	revOut = paste(paste(">", r), "rna_2.trim", sep='_')#
+	commandFor = paste( paste("cat", forString), forOut)#
+	commandRev = paste( paste("cat", revString), revOut)#
+	print("---------")#
+	print(r)#
+	print(paste(r, "runs:"))#
+	print(runs)#
+	print("commands:")#
+	print(commandFor)#
+	print(commandRev)#
+	all.commands = append(all.commands, commandFor)#
+	all.commands = append(all.commands, commandRev)#
+}#
+writeLines(all.commands, fileConn)#
+close(fileConn)
