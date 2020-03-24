@@ -1,0 +1,9 @@
+run	treatInfo	id	treat
+SRR3139752_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	final instar larva (worker)	larva1	0
+SRR3139751_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	final instar larva (worker)	larva2	0
+SRR3139750_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	final instar larva (worker)	larva3	0
+SRR3139749_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	final instar larva (worker)	larva4	0
+SRR3139748_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	adult alate	adult1	1
+SRR3139747_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	adult alate	adult2	1
+SRR3139746_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	adult alate	adult3	1
+SRR3139745_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	adult alate	adult4	1

@@ -1,0 +1,9 @@
+run	treatInfo	id	treat
+SRR2976847_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Brood care phase	control1	0
+SRR2976851_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Reproductive phase	treated1	1
+SRR2976854_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Brood care phase	control2	0
+SRR2976858_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Reproductive phase	treated2	1
+SRR2977064_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Brood care phase	control3	0
+SRR2977065_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Reproductive phase	treated3	1
+SRR2977066_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Brood care phase	control4	0
+SRR2977182_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	Reproductive phase	treated4	1

@@ -1,0 +1,1 @@
+Decided to use only the 8.0 and 7.2 treatment groups for greater discrimination

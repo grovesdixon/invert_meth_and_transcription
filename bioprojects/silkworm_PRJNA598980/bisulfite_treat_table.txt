@@ -1,0 +1,7 @@
+run	treatInfo	id	treat
+SRR10828854_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	m_Non-HCl Treated	m_Non-HCl Treated-3	0
+SRR10828855_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	m_Non-HCl Treated	m_Non-HCl Treated-2	0
+SRR10828856_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	m_Non-HCl Treated	m_Non-HCl Treated-1	0
+SRR10828857_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	m_HCl_Treated	m_HCl_Treated-3	1
+SRR10828858_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	m_HCl_Treated	m_HCl_Treated-2	1
+SRR10828859_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	m_HCl_Treated	m_HCl_Treated-1	1

@@ -1,0 +1,9 @@
+aiptasia_PRJNA415358
+stylophora_pistillata_PRJNA386774
+silkworm_PRJNA598980
+termite_PRJNA309979
+maternal_carpenterbees_PRJNA437497
+bumblebee_PRJNA533306
+subcaste_bees_PRJNA104931
+roboust_ants_PRJNA304722
+

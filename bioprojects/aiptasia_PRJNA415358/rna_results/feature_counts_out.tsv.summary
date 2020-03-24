@@ -1,0 +1,13 @@
+Status	A1_rna_dupsRemoved.bam	A2_rna_dupsRemoved.bam	A3_rna_dupsRemoved.bam	A4_rna_dupsRemoved.bam	A5_rna_dupsRemoved.bam	A6_rna_dupsRemoved.bam	S1_rna_dupsRemoved.bam	S2_rna_dupsRemoved.bam	S3_rna_dupsRemoved.bam	S4_rna_dupsRemoved.bam	S5_rna_dupsRemoved.bam	S6_rna_dupsRemoved.bam
+Assigned	13901963	14603647	11158730	13532334	16447292	14953532	21333361	20743631	17045579	13368076	14980867	17621877
+Unassigned_Unmapped	30834590	33134773	27771858	34384542	25170647	29877128	28812866	33690030	32046275	22908213	39881461	30324702
+Unassigned_MappingQuality	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_MultiMapping	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Secondary	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NonSplit	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NoFeatures	4797549	4871893	5501547	5488831	4354445	4874535	4919966	4997112	5138210	4876524	4817210	4487062
+Unassigned_Overlapping_Length	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Ambiguity	484500	510979	560465	535659	599125	548110	758313	747975	616911	664990	510825	615366

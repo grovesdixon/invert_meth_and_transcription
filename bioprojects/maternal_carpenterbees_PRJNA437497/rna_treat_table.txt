@@ -1,0 +1,7 @@
+run	treat	treatInfo
+SRR6819907	control	maternall care
+SRR6819908	control	maternall care
+SRR6819909	control	maternall care
+SRR6819910	treated	orphaned
+SRR6819911	treated	orphaned
+SRR6819912	treated	orphaned

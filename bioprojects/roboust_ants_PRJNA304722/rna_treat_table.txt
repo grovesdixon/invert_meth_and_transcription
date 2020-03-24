@@ -1,0 +1,9 @@
+run	treat	treatInfo
+SRR2969431	control	Brood care phase
+SRR2969433	treated	Reproductive phase
+SRR2969435	control	Brood care phase
+SRR2969436	treated	Reproductive phase
+SRR2969437	control	Brood care phase
+SRR2969438	treated	Reproductive phase
+SRR2969440	control	Brood care phase
+SRR2969447	treated	Reproductive phase

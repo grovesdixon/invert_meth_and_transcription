@@ -1,0 +1,13 @@
+Status	SRR2969431_dupsRemoved.bam	SRR2969433_dupsRemoved.bam	SRR2969435_dupsRemoved.bam	SRR2969436_dupsRemoved.bam	SRR2969437_dupsRemoved.bam	SRR2969438_dupsRemoved.bam	SRR2969440_dupsRemoved.bam	SRR2969447_dupsRemoved.bam
+Assigned	31968600	29948416	21738379	21653283	22648020	20767607	33539481	28234802
+Unassigned_Unmapped	931851	843946	691555	476544	798600	567264	1019199	871302
+Unassigned_MappingQuality	0	0	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0	0	0
+Unassigned_MultiMapping	0	0	0	0	0	0	0	0
+Unassigned_Secondary	0	0	0	0	0	0	0	0
+Unassigned_NonSplit	0	0	0	0	0	0	0	0
+Unassigned_NoFeatures	3131830	3114430	2410738	2151257	2488184	1949012	3180017	2647027
+Unassigned_Overlapping_Length	0	0	0	0	0	0	0	0
+Unassigned_Ambiguity	2310811	2350595	1608070	1655591	1609078	1579803	2305928	2165482

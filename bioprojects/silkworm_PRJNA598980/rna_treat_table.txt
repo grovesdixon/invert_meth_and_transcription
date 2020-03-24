@@ -1,0 +1,6 @@
+run	treat	treatInfo
+SRR10836807	control	Non-HCl Treated
+SRR10836808	control	Non-HCl Treated
+SRR10836809	control	Non-HCl Treated
+SRR10836810	treated	HCl_Treated
+SRR10836812	treated	HCl_Treated

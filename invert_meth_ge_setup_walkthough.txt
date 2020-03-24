@@ -1,0 +1,389 @@
+#bisulfite_walkthrough_gbMGe.txt
+#Groves Dixon
+#2-5-20
+
+########################################
+############## A.MILL RNA ##############
+########################################
+
+#grab fro mlong term storage
+scp grovesd@ranch.tacc.utexas.edu:/stornext/ranch_01/ranch/users/02260/grovesd/raw_sequence_reads/JA19078.tar.gz .
+
+#grab the fastqs and put them into single directory
+mkdir fastqs
+for dir in ls -d JA19078/*/; do echo "mv ${dir}*.gz fastqs/";done
+
+
+#concat lane duplicates
+for file in *L004*.fastq
+do echo "cat $file ${file/_L004_/_L005_} > ${file/_L004_R1_001.fastq/}.fastq" >> concat
+done
+
+
+
+########################################
+############## AQUIRE DATA #############
+########################################
+#projects organized into bioprojects/
+#each has its own SraRunTable.xlsx
+#assemble total runList.txt with get_all_runs.R
+wc -l runList.txt
+	#316
+
+
+#DOWNLOAD THE SRA FILES
+>download
+while read srr
+do echo "$PREFETCH $srr --max-size 500G" >> download
+done <runList.txt
+
+#Breakdown:
+	#aiptasia_PRJNA415358
+	ls SRR62* | wc -l
+		#174
+	#bumblebee_PRJNA533306
+	ls SRR892* | wc -l
+		#24
+	#maternal_carpenterbees_PRJNA437497
+	ls SRR681* | wc -l
+		#12
+	#roboust_ants_PRJNA304722
+	ls SRR29* | wc -l
+		#16
+	#silkworm_PRJNA598980
+	ls SRR108* | wc -l
+		#12
+	
+	#stylophora_pistillata_PRJNA386774
+	ls SRR557* | wc -l
+		#24
+		#!!!SPECIAL NOTE!
+		#5 OF THE SAMPLES HAVE FORWARD AND REVERSE READ PAIRS FLIPFLOPPED AND WILL FAIL TO MAP CORRECTLY AS A RESULT
+		#FIX WITH COMMANDS BELOW:
+		mv SRR5572205_1.fastq SRR5572205_R1temp
+		mv SRR5572206_1.fastq SRR5572206_R1temp
+		mv SRR5572207_1.fastq SRR5572207_R1temp
+		mv SRR5572208_1.fastq SRR5572208_R1temp
+		mv SRR5572209_1.fastq SRR5572209_R1temp
+		mv SRR5572205_2.fastq SRR5572205_R2temp
+		mv SRR5572206_2.fastq SRR5572206_R2temp
+		mv SRR5572207_2.fastq SRR5572207_R2temp
+		mv SRR5572208_2.fastq SRR5572208_R2temp
+		mv SRR5572209_2.fastq SRR5572209_R2temp
+		rename _R1temp _2.fastq *_R1temp
+		rename _R2temp _1.fastq *R2temp
+		
+	#subcaste_bees_PRJNA104931
+	ls SRR44* | wc -l
+		#34
+	#termite_PRJNA309979
+	ls SRR313* | wc -l
+		#20
+174+24+12+16+12+24+34+20==316
+
+
+
+#DUMP THE FASTQS
+>dump
+while read srr
+do echo "$FQDUMP --split-files ${PREFETCH_PATH}/sra/${srr}.sra">>dump
+done < runList.txt
+
+
+######################################
+############## TRIMMING ##############
+######################################
+
+
+#TRIMMING PAIRED END READS
+
+>trimpe
+for file in *_2.fastq
+do echo "cutadapt \
+-a GATCGGAAGAGCA \
+-A GATCGGAAGAGCA \
+-a AGATCGGAAGAGC \
+-A AGATCGGAAGAGC \
+--minimum-length 50 \
+-q 30 \
+-o ${file/_2.fastq/}_1.trim \
+-p ${file/_2.fastq/}_2.trim \
+${file/_2.fastq/}_1.fastq \
+$file" >> trimpe
+done
+
+
+launcher_creator.py -n trimpe -j trimpe -a $allo -e $email -q normal -t 12:00:00 -N 4 -w 40
+sbatch trimpe.slurm
+
+
+#####################################
+######### SORT INTO SUBDIRS #########
+#####################################
+
+#make subdirs
+mkdir aiptasia_PRJNA415358
+mkdir bumblebee_PRJNA533306
+mkdir maternal_carpenterbees_PRJNA437497
+mkdir roboust_ants_PRJNA304722
+mkdir silkworm_PRJNA598980
+mkdir stylophora_pistillata_PRJNA386774
+mkdir subcaste_bees_PRJNA104931
+mkdir termite_PRJNA309979
+
+#move trim files into them
+mv all/SRR62*.trim aiptasia_PRJNA415358
+mv all/SRR892*.trim bumblebee_PRJNA533306
+mv all/SRR681*.trim maternal_carpenterbees_PRJNA437497
+mv all/SRR29*.trim roboust_ants_PRJNA304722
+mv all/SRR108*.trim silkworm_PRJNA598980
+mv all/SRR557*.trim stylophora_pistillata_PRJNA386774
+mv all/SRR44*.trim subcaste_bees_PRJNA104931
+mv all/SRR313*.trim termite_PRJNA309979
+
+#subset the run table back out (build this with get_all_runs.R)
+grep PRJNA415358 fullSraRunTable.txt > aiptasia_PRJNA415358/sra.txt
+grep PRJNA533306 fullSraRunTable.txt > bumblebee_PRJNA533306/sra.txt
+grep PRJNA437497 fullSraRunTable.txt > maternal_carpenterbees_PRJNA437497/sra.txt
+grep PRJNA304722 fullSraRunTable.txt > roboust_ants_PRJNA304722/sra.txt
+grep PRJNA598980 fullSraRunTable.txt > silkworm_PRJNA598980/sra.txt
+grep PRJNA386774 fullSraRunTable.txt > stylophora_pistillata_PRJNA386774/sra.txt
+grep PRJNA104931 fullSraRunTable.txt > subcaste_bees_PRJNA104931/sra.txt
+grep PRJNA309979 fullSraRunTable.txt > termite_PRJNA309979/sra.txt
+
+
+#in each subdir
+mkdir rna
+mkdir bisulfite
+grep RNA sra.txt | cut -f 2 > rna.txt
+grep Bisulfite sra.txt | cut -f 2 > meth.txt
+while read sra; do mv ${sra}* rna/;done<rna.txt 
+while read sra; do mv ${sra}* bisulfite/;done<meth.txt 
+
+
+#concatenate Aiptaisia (commands for this in the textfiles below, generated with aiptaisia_merge_commands.R)
+cat_aiptaisia_bisulfite_trim_commands.txt
+cat_aiptaisia_RNA_trim_commands.txt
+
+
+######################################
+########## REFERENCE GENOMES #########
+######################################
+#For each genome, remove scaffolds less than 500 bp and prepare for bowtie and bismark mapping
+
+#also set up window boundary files
+
+#------- MAKING WINDOWS:
+#REPEAT FOR EACH REFERENCE
+GFF="Spis.revised.gff"
+GENOME="stylophora_longerThan500.fasta"
+#generate gene windows
+gff_to_bed4.py -gff $GFF -feature gene -IDstring ID -o geneBoundaries.bed
+
+#generate exon windows
+gff_to_bed4.py -gff $GFF -feature CDS -IDstring ID -o cdsBoundaries.bed
+
+#generate promoter windows
+gff_to_promoter_bed.py -gff $GFF -bp 1000 -IDstring ID -o promoterBoundaries.bed
+
+#generate for tss windows
+gff_to_tssWindow_bed.py -gff $GFF -bp 250 -IDstring ID -o tssBoundaries.bed
+
+#generate 1Kb windows
+module load bedtools
+fasta_sequence_characters.py -fa $GENOME > chrLengths.txt
+bedtools makewindows -g chrLengths.txt -w 1000 | awk 'BEGIN{OFS="\t"}{print $0,$1"-"$2"-"$3}' > windowBoundaries_1kb.bed
+
+#generate 500 bp windows
+module load bedtools
+fasta_sequence_characters.py -fa $GENOME > chrLengths.txt
+bedtools makewindows -g chrLengths.txt -w 500 | awk 'BEGIN{OFS="\t"}{print $0,$1"-"$2"-"$3}' > windowBoundaries_500bp.bed
+
+
+
+
+#------ AIPTAISIA ------#
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/aiptasia_genome
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/aiptasia_genome
+export GENOME_PATH=${GENOME_FOLDER}/GCA_001417965.1_Aiptasia_genome_1.1_genomic.fasta
+export GFF_PATH=${GENOME_FOLDER}/GCF_001417965.1_Aiptasia_genome_1.1_genomic.gff
+export GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/aiptaisiaReference.sh
+
+
+#------ AMILLEPORA ------#
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/Amil_Zach_Fullers_v2.00_ForBismark
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/Amil_Zach_Fullers_v2.00_ForBismark
+GENOME_PATH=${GENOME_FOLDER}/Amil_Zach_Fullers_v2.00_ForBismark/Amil.v2.00.chrs.fasta
+GFF_PATH=${GENOME_FOLDER}/Amil_Zach_Fullers_v2.00_ForBismark/Amil.coding.gff3
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/amilleporaReference.sh
+
+
+
+#------ BUMBLEBEE ------#
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/bumblebee_genome
+
+echo "\
+GENOME_PATH=${GENOME_FOLDER}/GCF_000214255.1_Bter_1.0_genomic.fasta
+GENOME_FOLDER=${GENOME_FOLDER}
+GFF_PATH=${GENOME_FOLDER}/GCF_000214255.1_Bter_1.0_genomic.gff
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/bumbleBeeReference.sh
+
+
+#---- MATERNAL BEE ----#
+
+echo "\
+GENOME_PATH=/work/02260/grovesd/lonestar/Ceratina_calcarata_genome_MIN500/GCF_001652005.1_ASM165200v1_genomic_MIN500.fasta
+GENOME_FOLDER=/work/02260/grovesd/lonestar/Ceratina_calcarata_genome_MIN500
+GFF_PATH=/work/02260/grovesd/lonestar/Ceratina_calcarata_genome_MIN500/GCF_001652005.1_ASM165200v1_genomic.gff
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/maternalBeeReference.sh
+
+
+#---- ROBUST ANT ----#
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/Ooceraea_biroi_genome
+
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/Ooceraea_biroi_genome
+GENOME_PATH=${GENOME_FOLDER}/GCF_003672135.1_Obir_v5.4_genomic.fasta
+GFF_PATH=${GENOME_FOLDER}/GCF_003672135.1_Obir_v5.4_genomic.gff
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/robustAntReference.sh
+
+#------- SILKWORM -------#
+#set path and download
+mkdir /work/02260/grovesd/lonestar/silkworm_genome/bismark
+cd /work/02260/grovesd/lonestar/silkworm_genome/bismark
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/151/625/GCF_000151625.1_ASM15162v1/GCF_000151625.1_ASM15162v1_genomic.fna.gz
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/151/625/GCF_000151625.1_ASM15162v1/GCF_000151625.1_ASM15162v1_genomic.gff.gz
+gunzip *.gz
+
+#remove short scaffolds
+fasta_sequence_characters.py -fa GCF_000151625.1_ASM15162v1_genomic.fna > scaffLengths.txt
+awk '{if ($2 > 500)
+	print $1}' scaffLengths.txt > longerThan500.txt
+subset_fasta.py GCF_000151625.1_ASM15162v1_genomic.fna longerThan500.txt > silkwormRef_longerThan500.fasta
+
+#index
+bowtie2-build silkwormRef_longerThan500.fasta silkwormRef_longerThan500.fasta &
+bismark_genome_preparation /work/02260/grovesd/lonestar/silkworm_genome/
+
+#set up info file
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/silkworm_genome
+
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/silkworm_genome
+GENOME_PATH=${GENOME_FOLDER}/silkwormRef_longerThan500.fasta
+GFF_PATH=${GENOME_FOLDER}/GCF_000151625.1_ASM15162v1_genomic.gff
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/silkwormReference.sh
+
+#----- STYLOPHORA -----#
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/stylophora_bismark_genome
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/stylophora_bismark_genome
+GENOME_PATH=${GENOME_FOLDER}/stylophora_longerThan500.fasta
+export GFF_PATH=${GENOME_FOLDER}/Spis.revised.gff
+export GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/stylophoraReference.sh
+
+
+#----- HONEYBEE -----#
+cd /work/02260/grovesd/lonestar/honeybee_genome
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/254/395/GCF_003254395.2_Amel_HAv3.1/GCF_003254395.2_Amel_HAv3.1_genomic.fna.gz
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/254/395/GCF_003254395.2_Amel_HAv3.1/GCF_003254395.2_Amel_HAv3.1_genomic.gff.gz
+
+
+GENOME_FOLDER=/work/02260/grovesd/lonestar/honeybee_genome
+echo "\
+GENOME_FOLDER=${GENOME_FOLDER}
+GENOME_PATH=${GENOME_FOLDER}/GCF_003254395.2_Amel_HAv3.1_genomic.fasta
+GFF_PATH=${GENOME_FOLDER}/GCF_003254395.2_Amel_HAv3.1_genomic.gff
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/honeybeeReference.sh
+
+
+#----- TERMITE -----#
+GENOME_FOLDER=/work/02260/grovesd/lonestar/zootermopsis_nevadensis_genome
+echo "\
+GENOME_FOLDER=${GENOME_FOLDER}
+GENOME_PATH=${GENOME_FOLDER}/GCA_000696155.1_ZooNev1.0_genomic.fa
+GFF_PATH=${GENOME_FOLDER}/GCA_000696155.1_ZooNev1.0_genomic.gff
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/termiteReference.sh
+
+
+##############################################
+########## GET CDS TO GENE ID TABLES #########
+##############################################
+source /work/02260/grovesd/lonestar/myReferences/aiptaisiaReference.sh    #aiptaisia
+source /work/02260/grovesd/lonestar/myReferences/amilleporaReference.sh   #amillepora
+source /work/02260/grovesd/lonestar/myReferences/bumbleBeeReference.sh    #bumblebee
+source /work/02260/grovesd/lonestar/myReferences/maternalBeeReference.sh  #maternal bee
+source /work/02260/grovesd/lonestar/myReferences/robustAntReference.sh    #robust ant
+source /work/02260/grovesd/lonestar/myReferences/silkwormReference.sh     #silkworm
+source /work/02260/grovesd/lonestar/myReferences/stylophoraReference.sh   #S. pistillata
+source /work/02260/grovesd/lonestar/myReferences/honeybeeReference.sh     #honeybee
+source /work/02260/grovesd/lonestar/myReferences/termiteReference.sh      #termite
+
+
+#get the cdsID to geneID table
+parent_table_from_gff.R --gff $GFF_PATH --feature CDS --o cdsID_mrnaID.tsv
+parent_table_from_gff.R --gff $GFF_PATH --feature mRNA --o mrnaID_geneID.tsv
+merge_cds_mrna_geneIDs.R --cds2mrna cdsID_mrnaID.tsv --mrna2gene mrnaID_geneID.tsv --o cdsID_geneID.tsv
+

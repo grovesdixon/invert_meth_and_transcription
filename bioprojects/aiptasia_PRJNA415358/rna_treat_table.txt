@@ -1,0 +1,13 @@
+run	treat	treatInfo
+A1	treated	aposymbiotic
+A2	treated	aposymbiotic
+A3	treated	aposymbiotic
+A4	treated	aposymbiotic
+A5	treated	aposymbiotic
+A6	treated	aposymbiotic
+S1	control	symbiotic
+S2	control	symbiotic
+S3	control	symbiotic
+S4	control	symbiotic
+S5	control	symbiotic
+S6	control	symbiotic

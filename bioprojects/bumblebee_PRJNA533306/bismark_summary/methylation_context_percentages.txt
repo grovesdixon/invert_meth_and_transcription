@@ -1,0 +1,7 @@
+file	CpG.pct	CHG.pct	CHH.pct	CN_or_CHH
+SRR8929844_1.trim_bismark_bt2_PE_report.txt	0.7%	0.4%	0.5%	
+SRR8929845_1.trim_bismark_bt2_PE_report.txt	0.6%	0.5%	0.5%	
+SRR8929846_1.trim_bismark_bt2_PE_report.txt	0.6%	0.4%	0.5%	
+SRR8929847_1.trim_bismark_bt2_PE_report.txt	0.6%	0.4%	0.5%	
+SRR8929850_1.trim_bismark_bt2_PE_report.txt	0.6%	0.4%	0.4%	
+SRR8929851_1.trim_bismark_bt2_PE_report.txt	0.6%	0.4%	0.4%	

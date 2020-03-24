@@ -1,0 +1,13 @@
+run	treat	treatInfo
+SRR445999	treated	Nurse
+SRR446000	treated	Nurse
+SRR446001	treated	Nurse
+SRR446002	treated	Nurse
+SRR446003	treated	Nurse
+SRR446004	treated	Nurse
+SRR446005	control	Forager
+SRR446006	control	Forager
+SRR446007	control	Forager
+SRR446008	control	Forager
+SRR446009	control	Forager
+SRR446010	control	Forager

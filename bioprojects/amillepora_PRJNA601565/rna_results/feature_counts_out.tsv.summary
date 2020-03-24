@@ -1,0 +1,13 @@
+Status	L5-S1_S216.trim_dupsRemoved.bam	L5-S2_S217.trim_dupsRemoved.bam	L5-S3_S218.trim_dupsRemoved.bam	L5-T1_S222.trim_dupsRemoved.bam	L5-T2_S223.trim_dupsRemoved.bam	L5-T3_S224.trim_dupsRemoved.bam	N12-S1_S219.trim_dupsRemoved.bam	N12-S2_S220.trim_dupsRemoved.bam	N12-S3_S221.trim_dupsRemoved.bam	N12-T1_S225.trim_dupsRemoved.bam	N12-T2_S226.trim_dupsRemoved.bam	N12-T3_S227.trim_dupsRemoved.bam
+Assigned	957957	702720	755183	944786	1009499	1127926	822306	920534	766141	864857	925761	905335
+Unassigned_Unmapped	947233	593734	683109	879707	857235	983911	826841	911615	681384	935196	983082	906892
+Unassigned_MappingQuality	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_MultiMapping	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Secondary	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NonSplit	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NoFeatures	712461	539924	553322	680454	770472	925233	580233	683920	548044	617216	710477	649257
+Unassigned_Overlapping_Length	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Ambiguity	29769	21924	23648	28497	29938	35129	24885	26956	22219	25265	25522	26096

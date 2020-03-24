@@ -1,0 +1,9 @@
+#analysis_steps.txt
+
+#Run through both pipelines on cluster to prepare data
+
+#plot pipeline counts and assemble tables
+	figure_plotting/pipeline_read_counts_all.R
+	
+
+

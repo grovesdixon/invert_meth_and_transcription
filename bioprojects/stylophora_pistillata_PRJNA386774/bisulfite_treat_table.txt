@@ -1,0 +1,7 @@
+run	treatInfo	id	treat
+SRR5572204_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	8	8.0B	0
+SRR5572205_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	8	8.0C	0
+SRR5572208_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	7.2	7.2A	1
+SRR5572209_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	7.2	7.2B	1
+SRR5572210_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	7.2	7.2C	1
+SRR5572213_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	8	8.0A	0

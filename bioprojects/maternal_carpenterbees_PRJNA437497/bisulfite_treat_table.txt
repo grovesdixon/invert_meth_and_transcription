@@ -1,0 +1,7 @@
+run	treatInfo	id	treat
+SRR6819913_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	maternall cared for	c1	0
+SRR6819914_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	maternall cared for	c2	0
+SRR6819915_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	maternall cared for	c3	0
+SRR6819916_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	orphaned	t1	1
+SRR6819917_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	orphaned	t2	1
+SRR6819918_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	orphaned	t3	1

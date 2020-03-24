@@ -1,0 +1,24 @@
+pm-L5-s2_S5		startingCount
+pm-L5-s3_S1		startingCount
+pm-L5-t1_S6		startingCount
+pm-L5-t3_S2		startingCount
+pm-N12-s2_S7		startingCount
+pm-N12-s3_S3		startingCount
+pm-N12-t1_S8		startingCount
+pm-N12-t3_S4		startingCount
+pm-L5-s2_S5	42143645	mappedCount
+pm-L5-s3_S1	42249775	mappedCount
+pm-L5-t1_S6	48198675	mappedCount
+pm-L5-t3_S2	55539453	mappedCount
+pm-N12-s2_S7	48530879	mappedCount
+pm-N12-s3_S3	48882397	mappedCount
+pm-N12-t1_S8	45880479	mappedCount
+pm-N12-t3_S4	41437975	mappedCount
+pm-L5-s2_S5.trim_bismark_bt2.deduplication_report.txt	26833666	dedupCount
+pm-L5-s3_S1.trim_bismark_bt2.deduplication_report.txt	26905915	dedupCount
+pm-L5-t1_S6.trim_bismark_bt2.deduplication_report.txt	31174359	dedupCount
+pm-L5-t3_S2.trim_bismark_bt2.deduplication_report.txt	37470538	dedupCount
+pm-N12-s2_S7.trim_bismark_bt2.deduplication_report.txt	32346694	dedupCount
+pm-N12-s3_S3.trim_bismark_bt2.deduplication_report.txt	34225518	dedupCount
+pm-N12-t1_S8.trim_bismark_bt2.deduplication_report.txt	32169644	dedupCount
+pm-N12-t3_S4.trim_bismark_bt2.deduplication_report.txt	26431898	dedupCount

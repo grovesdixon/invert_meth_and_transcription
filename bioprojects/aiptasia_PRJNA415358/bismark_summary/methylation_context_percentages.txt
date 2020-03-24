@@ -1,0 +1,13 @@
+file	CpG.pct	CHG.pct	CHH.pct	CN_or_CHH
+A1_met_1.trim_bismark_bt2_PE_report.txt	6.3%	0.1%	0.1%	
+A2_met_1.trim_bismark_bt2_PE_report.txt	6.3%	0.1%	0.1%	
+A3_met_1.trim_bismark_bt2_PE_report.txt	6.4%	0.1%	0.1%	
+A4_met_1.trim_bismark_bt2_PE_report.txt	6.5%	0.1%	0.1%	
+A5_met_1.trim_bismark_bt2_PE_report.txt	6.5%	0.1%	0.1%	
+A6_met_1.trim_bismark_bt2_PE_report.txt	6.4%	0.1%	0.1%	
+S1_met_1.trim_bismark_bt2_PE_report.txt	6.8%	0.1%	0.1%	
+S2_met_1.trim_bismark_bt2_PE_report.txt	6.4%	0.1%	0.1%	
+S3_met_1.trim_bismark_bt2_PE_report.txt	6.6%	0.1%	0.1%	
+S4_met_1.trim_bismark_bt2_PE_report.txt	6.6%	0.1%	0.1%	
+S5_met_1.trim_bismark_bt2_PE_report.txt	6.3%	0.1%	0.1%	
+S6_met_1.trim_bismark_bt2_PE_report.txt	6.5%	0.1%	0.1%	

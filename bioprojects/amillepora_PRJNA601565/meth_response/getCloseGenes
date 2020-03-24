@@ -1,0 +1,2 @@
+closeBound_upDown_gene_fromBed.R --g /work/02260/grovesd/lonestar/Amil_Zach_Fullers_v2.00_ForBismark/Amil.coding.gff3 --b 1KbWindows_change_significant.tsv --o 1KbWindows_change_significant_closeGeneDistances.tsv
+closeBound_upDown_gene_fromBed.R --g /work/02260/grovesd/lonestar/Amil_Zach_Fullers_v2.00_ForBismark/Amil.coding.gff3 --b 500bpWindows_change_significant.tsv --o 500bpWindows_change_significant_closeGeneDistances.tsv

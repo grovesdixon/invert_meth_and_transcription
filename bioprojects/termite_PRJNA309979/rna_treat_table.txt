@@ -1,0 +1,13 @@
+run	treat	treatInfo
+SRR3139744	control	final instar larva (worker)
+SRR3139743	control	final instar larva (worker)
+SRR3139742	control	final instar larva (worker)
+SRR3139741	control	final instar larva (worker)
+SRR3139740	control	final instar larva (worker)
+SRR3139739	control	final instar larva (worker)
+SRR3139738	treated	adult alate
+SRR3139737	treated	adult alate
+SRR3139736	treated	adult alate
+SRR3139735	treated	adult alate
+SRR3139734	treated	adult alate
+SRR3139733	treated	adult alate

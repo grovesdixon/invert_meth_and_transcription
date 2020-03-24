@@ -1,0 +1,7 @@
+run	treatInfo	id	treat
+SRR8929844_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	reproductive	r1	1
+SRR8929845_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	sterile	s1	0
+SRR8929846_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	reproductive	r2	1
+SRR8929847_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	sterile	s2	0
+SRR8929850_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	reproductive	r3	1
+SRR8929851_1.trim_bismark_bt2_pe.deduplicated.bismark.cov	sterile	s3	0
