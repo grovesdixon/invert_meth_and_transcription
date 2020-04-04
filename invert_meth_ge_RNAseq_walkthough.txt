@@ -63,7 +63,7 @@ do runID=${file/.sam/}
  samtools index ${runID}_dupsRemoved.bam" >> removeDups
  done
  
-launcher_creator.py -n rDupSub -j removeDups -t 12:00:00 -q normal -a $allo -e $email -N 3 -w 2
+launcher_creator.py -n rDupSub -j removeDups -t 18:00:00 -q normal -a $allo -e $email -N 4 -w 2
 ##run only two per node, assuming 12 sam files, using six nodes allows for all to run simultaneously, expect run to last ~2-4 hours
 
 

@@ -1,0 +1,218 @@
+#setup_primate_gbm.txt
+
+
+##########################################
+############# SET UP GENOMES #############
+##########################################
+#using ensemble genomes
+
+#----- HUMAN
+
+#download
+cd /work/02260/grovesd/lonestar/human_genome
+wget ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.toplevel.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-99/gff3/homo_sapiens/Homo_sapiens.GRCh38.99.gff3.gz
+
+#the genome seems to have a bunch of additional chrs we don't need
+#subset for only the main ones:
+grep "^>" Homo_sapiens.GRCh38.dna.toplevel.fa | head -n 25 | cut -d " " -f 1 sub0 | sed "s/>//" > sub.txt
+subset_fastaV2.py -fa Homo_sapiens.GRCh38.dna.toplevel.fa -i sub.txt -o Homo_sapiens.GRCh38._chrsOnly.fasta
+
+
+
+#set up variables for this reference
+GENOME_FOLDER=/work/02260/grovesd/lonestar/human_genome
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/human_genome
+GENOME_PATH=${GENOME_FOLDER}/Homo_sapiens.GRCh38.dna.toplevel.fa
+GFF_PATH=${GENOME_FOLDER}/Homo_sapiens.GRCh38.99.gff3
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/humanReference.sh
+
+
+#----- CHIMP
+
+#download
+cd /work/02260/grovesd/lonestar/chimp_genome
+wget ftp://ftp.ensembl.org/pub/release-99/fasta/pan_troglodytes/dna/Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-99/gff3/pan_troglodytes/Pan_troglodytes.Pan_tro_3.0.99.gff3.gz
+
+#set up variables for this reference
+GENOME_FOLDER=/work/02260/grovesd/lonestar/chimp_genome
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/chimp_genome
+GENOME_PATH=${GENOME_FOLDER}/Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa
+GFF_PATH=${GENOME_FOLDER}/Pan_troglodytes.Pan_tro_3.0.99.gff3
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/chimpReference.sh
+
+
+#----- MACAC
+
+#download
+cd /work/02260/grovesd/lonestar/macaca_genome
+wget ftp://ftp.ensembl.org/pub/release-99/fasta/macaca_mulatta/dna/Macaca_mulatta.Mmul_10.dna.toplevel.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-99/gff3/macaca_mulatta/Macaca_mulatta.Mmul_10.99.gff3.gz
+
+
+#set up variables for this reference
+GENOME_FOLDER=/work/02260/grovesd/lonestar/macaca_genome
+echo "\
+GENOME_FOLDER=/work/02260/grovesd/lonestar/macaca_genome
+GENOME_PATH=${GENOME_FOLDER}/Macaca_mulatta.Mmul_10.dna.toplevel.fa
+GFF_PATH=${GENOME_FOLDER}/Macaca_mulatta.Mmul_10.99.gff3
+GENE_ID=ID
+exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
+geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
+promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
+tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
+window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/macaqueRference.sh
+
+
+#INDEX FOR RNA AND BISMARK
+module load bowtie
+>doBuilds
+echo "bowtie2-build human_genome/Homo_sapiens.GRCh38.dna.toplevel.fa human_genome/Homo_sapiens.GRCh38.dna.toplevel.fa" >> doBuilds
+echo "bowtie2-build chimp_genome/Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa chimp_genome/Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa" >> doBuilds
+echo "bowtie2-build macaca_genome/Macaca_mulatta.Mmul_10.dna.toplevel.fa macaca_genome/Macaca_mulatta.Mmul_10.dna.toplevel.fa" >> doBuilds
+echo "bismark_genome_preparation /work/02260/grovesd/lonestar/human_genome" >> doBuilds
+echo "bismark_genome_preparation /work/02260/grovesd/lonestar/chimp_genome" >> doBuilds
+echo "bismark_genome_preparation /work/02260/grovesd/lonestar/macaca_genome" >> doBuilds
+
+
+
+
+
+#------- MAKING WINDOWS:
+#REPEAT FOR EACH REFERENCE
+GFF="GCF_000151625.1_ASM15162v1_genomic.gff"
+GENOME="silkwormRef_longerThan500.fasta"
+#generate gene windows
+gff_to_bed4.py -gff $GFF -feature gene -IDstring ID -o geneBoundaries.bed
+
+#generate exon windows
+gff_to_bed4.py -gff $GFF -feature CDS -IDstring ID -o cdsBoundaries.bed
+
+#generate promoter windows
+gff_to_promoter_bed.py -gff $GFF -bp 1000 -IDstring ID -o promoterBoundaries.bed
+
+#generate for tss windows
+gff_to_tssWindow_bed.py -gff $GFF -bp 250 -IDstring ID -o tssBoundaries.bed
+
+#generate 1Kb windows
+module load bedtools
+fasta_sequence_characters.py -fa $GENOME > chrLengths.txt
+bedtools makewindows -g chrLengths.txt -w 1000 | awk 'BEGIN{OFS="\t"}{print $0,$1"-"$2"-"$3}' > windowBoundaries_1kb.bed
+
+#generate 500 bp windows
+module load bedtools
+fasta_sequence_characters.py -fa $GENOME > chrLengths.txt
+bedtools makewindows -g chrLengths.txt -w 500 | awk 'BEGIN{OFS="\t"}{print $0,$1"-"$2"-"$3}' > windowBoundaries_500bp.bed
+
+
+
+
+
+################################
+###### DOWNLOAD RAW READS ######
+################################
+
+#accession is PRJNA445737
+
+#DOWNLOAD FROM RUNLIST AND DUMP
+
+>download
+while read srr
+do echo "$PREFETCH $srr --max-size 1000G" >> download
+done <runList.txt
+
+
+#dump the fastq files where you want
+#first navigate to the directory you want the placed
+>dump
+while read srr
+do echo "$FQDUMP --split-files ${PREFETCH_PATH}/sra/${srr}.sra &">>dump
+done <runList.txt
+
+
+########################################
+############### TRIMMING ###############
+########################################
+
+#RUN TRIMMING
+>trimse
+for file in *.fastq
+do echo "cutadapt \
+-a GATCGGAAGAGCA \
+--minimum-length 20 \
+-q 20 \
+-o ${file/.fastq/}.trim \
+$file > ${file}_trimlog.txt" >> trimse
+done
+
+launcher_creator.py -n trimse -j trimse -q normal -N 2 -w 24 -a $allo -e $email -t 12:00:00
+
+
+
+##########################################
+##### ORGANIZE BY SPECIES AND ASSAY ######
+##########################################
+
+
+#execute commands in rename_rna_fastq.txt and cat_bisulfite_fastqs.txt
+#this will give concatenated forms by actual sample
+
+#--- ORGANIZE HUMAN ---#
+
+mkdir human_rna
+cd human_rna
+ln -s ../renamed_rna_trimmed/6*.trim .
+ls *.trim | wc -l
+	#16
+
+mkdir human_bisulfite
+cd human_bisulfite
+ln -s ../catted_wgbs_trimmed/6*.trim .
+ls *.trim | wc -l
+	#16
+
+#--- ORGANIZE CHIMP ---#
+
+mkdir chimp_rna
+cd chimp_rna
+while read ind; do ln -s ../renamed_rna_trimmed/${ind}*.trim .;done < chimp_inds.txt
+ls *.trim | wc -l
+	#16
+	
+mkdir chimp_bisulfite
+cd chimp_bisulfite
+while read ind; do ln -s ../catted_wgbs_trimmed/${ind}*.trim .;done < chimp_inds.txt
+ls *.trim | wc -l
+	#16
+	
+#--- ORGANIZE MACAQUE ---#
+
+mkdir macac_rna
+cd macac_rna
+while read ind; do ln -s ../renamed_rna_trimmed/${ind}*.trim .;done < macac_inds.txt
+ls *.trim | wc -l
+	#16
+	
+mkdir macac_bisulfite
+cd macac_bisulfite
+while read ind; do ln -s ../catted_wgbs_trimmed/${ind}*.trim .;done < macac_inds.txt
+ls *.trim | wc -l
+	#16
+
+#NOW SWITCH TO RNAseq_primate_gbm.txt and methylation_primate_gbm.txt to continue with the two pipelines

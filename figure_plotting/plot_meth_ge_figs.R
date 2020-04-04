@@ -31,7 +31,7 @@ load_lvl = function(x){
                               fracMeth)) %>% 
     group_by(chr, name) %>% 
     mutate(lfrac_meth = log(fracMeth, 2)) %>% 
-    select(-fracMeth)
+    dplyr::select(-fracMeth)
 }
 
 #get the rld data for each project
@@ -52,7 +52,7 @@ swap_exon_names = function(n){
     left_join(cds_gene, by = 'name') %>% 
     ungroup() %>% 
     mutate(name=gene) %>% 
-    select(-gene) %>% 
+    dplyr::select(-gene) %>% 
     group_by(name) %>% 
     summarize(lfrac_meth = mean(lfrac_meth))
 }
@@ -107,7 +107,7 @@ get_gene_lengths = function(x){
   print(paste('loading ', x, '...', sep=''))
   df = read_tsv(x) %>% 
     mutate(length = end - start) %>% 
-    select(name, length)
+    dplyr::select(name, length)
   return(df)
 }
 
@@ -456,7 +456,7 @@ plot_responses = function(n, diff_lvl_list, xcol, ycol, YLIM, XLIM){
 #build plots
 gbm_response_plotlist = list()
 for (n in dat_names){
-  print(head(plt_df))
+  print(n)
   gbm_response_plotlist[[n]] = plot_responses(n, gbm_ge_change_list, 'meth.diff', 'log2FoldChange', FALSE)
 }
 
@@ -533,32 +533,152 @@ tss_response_plotlist = assemble_row_panels(promoter_response_plotlist, 2, 'TSS 
 
 
 
+# PLOT GE VS INDIVIDUAL EXON ----------------------------------------------
+
+#load the exon methylation change results
+exon_mkit_list = list()
+for (n in dat_names){
+  print(n)
+  mk_df = load_methylkit_results(n, 'exon_change_methylKit.Rdata')
+  bpd = bioprojectDirs[n]
+  cds_gene_file = paste('bioprojects/', bpd, '/cdsID_geneID.tsv', sep='')
+  cds_gene = read_tsv(cds_gene_file) %>% 
+    dplyr::rename(name=cds)
+  exon_df = mk_df %>% 
+    left_join(cds_gene, by = 'name') %>% 
+    group_by(gene) %>% 
+    summarize(meth.diff = max(meth.diff)) %>% 
+    ungroup() %>% 
+    dplyr::rename(name=gene)
+  exon_mkit_list[[n]] = exon_df
+}
+
+
+#merge with ge
+exon_ge_list = list()
+for (n in dat_names){
+  print(n)
+  gedat = ge_change_list[[n]]
+  edat = exon_mkit_list[[n]]
+  exon_ge_list[[n]] = full_join(edat, gedat, by = 'name') %>% 
+    mutate(absl2 = abs(log2FoldChange),
+           abs.meth.diff = abs(meth.diff))
+}
+
+
+#build plots
+e_plt_list = list()
+eabs_plt_list = list()
+for (n in dat_names){
+  e_plt_list[[n]] = plot_responses(n, exon_ge_list, 'meth.diff', 'log2FoldChange', YLIM=FALSE)
+  eabs_plt_list[[n]] = plot_responses(n, exon_ge_list, 'abs.meth.diff', 'absl2', YLIM=FALSE)
+}
+
+ae_plts = assemble_row_panels(e_plt_list, 2, 'max exon methylation change', 'expression change', ry, rx)
+aeabs_plts = assemble_row_panels(eabs_plt_list, 2, 'max exon methylation change', 'abs expression change', ry, rx)
+
 # CHANGES IN WINDOWS ------------------------------------------------------
 
-#function to load significant windows
-n
-dist_cut = 2e3
-
+#function to read in window meth data and merge with ge
 read_windows = function(n, window_file, dist_cut){
   bpd = bioprojectDirs[n]
   window_path = paste('bioprojects/', bpd, '/meth_response/significant/', window_file, sep='')
-  w_df = read_tsv(window_path) %>% 
-    mutate(split1 = sapply(gene.description, function(x) strsplit(x, 'ID=')[[1]][2]),
-           name = sapply(split1, function(x) strsplit(x, ';')[[1]][1])) %>% 
-    filter(gene.distance < dist_cut)
+  ge_diffs = ge_change_list[[n]]
+  w_df = read_tsv(window_path)
+  if (nrow(w_df) > 0){
+    res = w_df %>% 
+      mutate(split1 = sapply(gene.description, function(x) strsplit(x, 'ID=')[[1]][2]),
+             name = sapply(split1, function(x) strsplit(x, ';')[[1]][1])) %>% 
+      dplyr::select(-gene.chr, -gene.description, -gene.strand, -split1)
+      
+  }
+  else {
+    res = 'no significant'
+  }
 }
 
-w500_list = list()
+
+window_file = '1KbWindows_change_significant_closeGeneDistances.tsv'
+min_dist = 2000
+require_in_gene = TRUE
+
+
+#upload the 500bp windows
+window_list0 = list()
 for (n in dat_names){
   print(n)
-  w500_list[[n]] = read_windows(n, '500bpWindows_change_significant_closeGeneDistances.tsv', 2e3)
+  res = read_windows(n, '500bpWindows_change_significant_closeGeneDistances.tsv', 2e3)
+  if (class(res)=="character"){
+    next
+  } else{
+    window_list0[[n]] = res
+  }
+}
+names(window_list0)
+
+
+filter_windows = function(x){
+  if (require_in_gene){
+    x= x %>% 
+      filter(gene.distance < min_dist,
+             gene.enclosesWindow)
+  } else {
+    x = x %>% 
+      filter(gene.distance < min_dist)
+  }
+  return(x)
 }
 
+window_list = map(window_list0, function(x) filter_windows(x))
 
 
+make_ge_calls = function(n){
+  print(n)
+  n=dat_names[1]
+  wdat = window_list[[n]]
+  sig_meth = wdat$name
+  gedat = ge_change_list[[n]] %>% 
+    mutate(isSig = name %in% sig_meth,
+           absl2 = abs(log2FoldChange)) %>% 
+    as_tibble()
+  return(gedat)
+}
+
+ge_windows = map(dat_names, make_ge_calls)
+names(ge_windows) = dat_names
 
 
+#function to plot l2
+plot_l2 = function(n){
+  gedat = ge_windows[[n]]
+  logo = logo_list[[n]]
+  plt = gedat %>% 
+    ggplot(aes(x=isSig, y=log2FoldChange)) +
+    geom_boxplot()
+  ggdraw(plt) + draw_image(logo,
+                           x=logo_corner - logo_scale,
+                           y=logo_corner-logo_scale, 
+                           width = logo_scale,
+                           height = logo_scale)
+}
+
+l2_plts = map(dat_names, plot_l2)
+l2_ass = plot_grid(plotlist = l2_plts, nrow=2)
 
 
+plot_absl2 = function(n){
+  gedat = ge_windows[[n]]
+  logo = logo_list[[n]]
+  plt = gedat %>% 
+    ggplot(aes(x=isSig, y=absl2)) +
+    geom_boxplot() +
+    lims(y=c(0,1))
+  ggdraw(plt) + draw_image(logo,
+                           x=logo_corner - logo_scale,
+                           y=logo_corner-logo_scale, 
+                           width = logo_scale,
+                           height = logo_scale)
+}
 
-
+absl2_plts = map(dat_names, plot_absl2)
+absl2_ass = plot_grid(plotlist = absl2_plts, nrow=2)

@@ -1,0 +1,17 @@
+Run	Assay Type	Organism	sex	tissue
+SRR6900797	RNA-Seq	Macaca mulatta	male	heart
+SRR6900798	RNA-Seq	Macaca mulatta	male	kidney
+SRR6900799	RNA-Seq	Macaca mulatta	male	liver
+SRR6900800	RNA-Seq	Macaca mulatta	male	lung
+SRR6900801	RNA-Seq	Macaca mulatta	female	heart
+SRR6900802	RNA-Seq	Macaca mulatta	female	kidney
+SRR6900803	RNA-Seq	Macaca mulatta	female	liver
+SRR6900804	RNA-Seq	Macaca mulatta	female	lung
+SRR6900805	RNA-Seq	Macaca mulatta	male	heart
+SRR6900806	RNA-Seq	Macaca mulatta	male	kidney
+SRR6900807	RNA-Seq	Macaca mulatta	male	liver
+SRR6900808	RNA-Seq	Macaca mulatta	male	lung
+SRR6900809	RNA-Seq	Macaca mulatta	male	heart
+SRR6900810	RNA-Seq	Macaca mulatta	male	kidney
+SRR6900811	RNA-Seq	Macaca mulatta	male	liver
+SRR6900812	RNA-Seq	Macaca mulatta	male	lung

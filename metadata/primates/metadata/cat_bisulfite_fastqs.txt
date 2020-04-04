@@ -1,0 +1,96 @@
+cat SRR7289942_1.fastq SRR7289943_1.fastq SRR7289944_1.fastq SRR7289945_1.fastq > 60705_heartReclassedAsLiver_catted_1.fastq
+cat SRR7289942_1.trim SRR7289943_1.trim SRR7289944_1.trim SRR7289945_1.trim > 60705_heartReclassedAsLiver_catted_1.trim
+cat SRR7289946_1.fastq SRR7289947_1.fastq > 60705_kidney_catted_1.fastq
+cat SRR7289946_1.trim SRR7289947_1.trim > 60705_kidney_catted_1.trim
+cat SRR7289948_1.fastq SRR7289949_1.fastq > 60705_liver_catted_1.fastq
+cat SRR7289948_1.trim SRR7289949_1.trim > 60705_liver_catted_1.trim
+cat SRR7289950_1.fastq SRR7289951_1.fastq SRR7289952_1.fastq > 60705_lung_catted_1.fastq
+cat SRR7289950_1.trim SRR7289951_1.trim SRR7289952_1.trim > 60705_lung_catted_1.trim
+cat SRR7289955_1.fastq SRR7289956_1.fastq > 61317_kidney_catted_1.fastq
+cat SRR7289955_1.trim SRR7289956_1.trim > 61317_kidney_catted_1.trim
+cat SRR7289957_1.fastq SRR7289958_1.fastq > 61317_liver_catted_1.fastq
+cat SRR7289957_1.trim SRR7289958_1.trim > 61317_liver_catted_1.trim
+cat SRR7289959_1.fastq SRR7289960_1.fastq SRR7289961_1.fastq SRR7289962_1.fastq > 61317_lung_catted_1.fastq
+cat SRR7289959_1.trim SRR7289960_1.trim SRR7289961_1.trim SRR7289962_1.trim > 61317_lung_catted_1.trim
+cat SRR7289953_1.fastq SRR7289954_1.fastq > 61317_heart_catted_1.fastq
+cat SRR7289953_1.trim SRR7289954_1.trim > 61317_heart_catted_1.trim
+cat SRR7289965_1.fastq SRR7289966_1.fastq > 62789_kidney_catted_1.fastq
+cat SRR7289965_1.trim SRR7289966_1.trim > 62789_kidney_catted_1.trim
+cat SRR7289967_1.fastq SRR7289968_1.fastq > 62789_liver_catted_1.fastq
+cat SRR7289967_1.trim SRR7289968_1.trim > 62789_liver_catted_1.trim
+cat SRR7289969_1.fastq SRR7289970_1.fastq > 62789_lung_catted_1.fastq
+cat SRR7289969_1.trim SRR7289970_1.trim > 62789_lung_catted_1.trim
+cat SRR7289963_1.fastq SRR7289964_1.fastq > 62789_heart_catted_1.fastq
+cat SRR7289963_1.trim SRR7289964_1.trim > 62789_heart_catted_1.trim
+cat SRR7289973_1.fastq SRR7289974_1.fastq > 62905_kidney_catted_1.fastq
+cat SRR7289973_1.trim SRR7289974_1.trim > 62905_kidney_catted_1.trim
+cat SRR7289975_1.fastq SRR7289976_1.fastq > 62905_liver_catted_1.fastq
+cat SRR7289975_1.trim SRR7289976_1.trim > 62905_liver_catted_1.trim
+cat SRR7289977_1.fastq SRR7289978_1.fastq SRR7289979_1.fastq > 62905_lung_catted_1.fastq
+cat SRR7289977_1.trim SRR7289978_1.trim SRR7289979_1.trim > 62905_lung_catted_1.trim
+cat SRR7289971_1.fastq SRR7289972_1.fastq > 62905_heart_catted_1.fastq
+cat SRR7289971_1.trim SRR7289972_1.trim > 62905_heart_catted_1.trim
+cat SRR7289982_1.fastq SRR7289983_1.fastq SRR7289984_1.fastq > YN07-314_kidney_catted_1.fastq
+cat SRR7289982_1.trim SRR7289983_1.trim SRR7289984_1.trim > YN07-314_kidney_catted_1.trim
+cat SRR7289985_1.fastq SRR7289986_1.fastq > YN07-314_liver_catted_1.fastq
+cat SRR7289985_1.trim SRR7289986_1.trim > YN07-314_liver_catted_1.trim
+cat SRR7289987_1.fastq SRR7289988_1.fastq > YN07-314_lung_catted_1.fastq
+cat SRR7289987_1.trim SRR7289988_1.trim > YN07-314_lung_catted_1.trim
+cat SRR7289980_1.fastq SRR7289981_1.fastq > YN07-314_heart_catted_1.fastq
+cat SRR7289980_1.trim SRR7289981_1.trim > YN07-314_heart_catted_1.trim
+cat SRR7289991_1.fastq SRR7289992_1.fastq > YN07-330_kidney_catted_1.fastq
+cat SRR7289991_1.trim SRR7289992_1.trim > YN07-330_kidney_catted_1.trim
+cat SRR7289993_1.fastq SRR7289994_1.fastq > YN07-330_liver_catted_1.fastq
+cat SRR7289993_1.trim SRR7289994_1.trim > YN07-330_liver_catted_1.trim
+cat SRR7289995_1.fastq SRR7289996_1.fastq > YN07-330_lung_catted_1.fastq
+cat SRR7289995_1.trim SRR7289996_1.trim > YN07-330_lung_catted_1.trim
+cat SRR7289989_1.fastq SRR7289990_1.fastq > YN07-330_heart_catted_1.fastq
+cat SRR7289989_1.trim SRR7289990_1.trim > YN07-330_heart_catted_1.trim
+cat SRR7289999_1.fastq SRR7290000_1.fastq > YN07-315_kidney_catted_1.fastq
+cat SRR7289999_1.trim SRR7290000_1.trim > YN07-315_kidney_catted_1.trim
+cat SRR7290001_1.fastq SRR7290002_1.fastq > YN07-315_liver_catted_1.fastq
+cat SRR7290001_1.trim SRR7290002_1.trim > YN07-315_liver_catted_1.trim
+cat SRR7290003_1.fastq SRR7290004_1.fastq SRR7290005_1.fastq > YN07-315_lung_catted_1.fastq
+cat SRR7290003_1.trim SRR7290004_1.trim SRR7290005_1.trim > YN07-315_lung_catted_1.trim
+cat SRR7289997_1.fastq SRR7289998_1.fastq > YN07-315_heart_catted_1.fastq
+cat SRR7289997_1.trim SRR7289998_1.trim > YN07-315_heart_catted_1.trim
+cat SRR7290008_1.fastq SRR7290009_1.fastq > YN07-317_kidney_catted_1.fastq
+cat SRR7290008_1.trim SRR7290009_1.trim > YN07-317_kidney_catted_1.trim
+cat SRR7290010_1.fastq SRR7290011_1.fastq > YN07-317_liver_catted_1.fastq
+cat SRR7290010_1.trim SRR7290011_1.trim > YN07-317_liver_catted_1.trim
+cat SRR7290012_1.fastq SRR7290013_1.fastq SRR7290014_1.fastq > YN07-317_lung_catted_1.fastq
+cat SRR7290012_1.trim SRR7290013_1.trim SRR7290014_1.trim > YN07-317_lung_catted_1.trim
+cat SRR7290006_1.fastq SRR7290007_1.fastq > YN07-317_heart_catted_1.fastq
+cat SRR7290006_1.trim SRR7290007_1.trim > YN07-317_heart_catted_1.trim
+cat SRR7289908_1.fastq SRR7289909_1.fastq > 4x0519_kidney_catted_1.fastq
+cat SRR7289908_1.trim SRR7289909_1.trim > 4x0519_kidney_catted_1.trim
+cat SRR7289910_1.fastq SRR7289911_1.fastq > 4x0519_liver_catted_1.fastq
+cat SRR7289910_1.trim SRR7289911_1.trim > 4x0519_liver_catted_1.trim
+cat SRR7289912_1.fastq SRR7289913_1.fastq SRR7289914_1.fastq > 4x0519_lung_catted_1.fastq
+cat SRR7289912_1.trim SRR7289913_1.trim SRR7289914_1.trim > 4x0519_lung_catted_1.trim
+cat SRR7289904_1.fastq SRR7289905_1.fastq SRR7289906_1.fastq SRR7289907_1.fastq > 4x0519_heart_catted_1.fastq
+cat SRR7289904_1.trim SRR7289905_1.trim SRR7289906_1.trim SRR7289907_1.trim > 4x0519_heart_catted_1.trim
+cat SRR7289917_1.fastq SRR7289918_1.fastq > YN07-387_kidney_catted_1.fastq
+cat SRR7289917_1.trim SRR7289918_1.trim > YN07-387_kidney_catted_1.trim
+cat SRR7289919_1.fastq SRR7289920_1.fastq > YN07-387_liver_catted_1.fastq
+cat SRR7289919_1.trim SRR7289920_1.trim > YN07-387_liver_catted_1.trim
+cat SRR7289921_1.fastq SRR7289922_1.fastq > YN07-387_lung_catted_1.fastq
+cat SRR7289921_1.trim SRR7289922_1.trim > YN07-387_lung_catted_1.trim
+cat SRR7289915_1.fastq SRR7289916_1.fastq > YN07-387_heart_catted_1.fastq
+cat SRR7289915_1.trim SRR7289916_1.trim > YN07-387_heart_catted_1.trim
+cat SRR7289925_1.fastq SRR7289926_1.fastq SRR7289927_1.fastq SRR7289928_1.fastq > 4x0516_kidney_catted_1.fastq
+cat SRR7289925_1.trim SRR7289926_1.trim SRR7289927_1.trim SRR7289928_1.trim > 4x0516_kidney_catted_1.trim
+cat SRR7289929_1.fastq SRR7289930_1.fastq > 4x0516_liver_catted_1.fastq
+cat SRR7289929_1.trim SRR7289930_1.trim > 4x0516_liver_catted_1.trim
+cat SRR7289931_1.fastq SRR7289932_1.fastq > 4x0516_lung_catted_1.fastq
+cat SRR7289931_1.trim SRR7289932_1.trim > 4x0516_lung_catted_1.trim
+cat SRR7289923_1.fastq SRR7289924_1.fastq > 4x0516_heart_catted_1.fastq
+cat SRR7289923_1.trim SRR7289924_1.trim > 4x0516_heart_catted_1.trim
+cat SRR7289935_1.fastq SRR7289936_1.fastq SRR7289937_1.fastq > YN07-147_kidney_catted_1.fastq
+cat SRR7289935_1.trim SRR7289936_1.trim SRR7289937_1.trim > YN07-147_kidney_catted_1.trim
+cat SRR7289938_1.fastq SRR7289939_1.fastq > YN07-147_liver_catted_1.fastq
+cat SRR7289938_1.trim SRR7289939_1.trim > YN07-147_liver_catted_1.trim
+cat SRR7289940_1.fastq SRR7289941_1.fastq > YN07-147_lung_catted_1.fastq
+cat SRR7289940_1.trim SRR7289941_1.trim > YN07-147_lung_catted_1.trim
+cat SRR7289933_1.fastq SRR7289934_1.fastq > YN07-147_heart_catted_1.fastq
+cat SRR7289933_1.trim SRR7289934_1.trim > YN07-147_heart_catted_1.trim

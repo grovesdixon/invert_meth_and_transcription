@@ -1,0 +1,17 @@
+Run	Assay Type	Organism	sex	tissue
+SRR6900781	RNA-Seq	Homo sapiens	male	heartReclassedAsLiver
+SRR6900782	RNA-Seq	Homo sapiens	male	kidney
+SRR6900783	RNA-Seq	Homo sapiens	male	liver
+SRR6900784	RNA-Seq	Homo sapiens	male	lung
+SRR6900785	RNA-Seq	Homo sapiens	male	heart
+SRR6900786	RNA-Seq	Homo sapiens	male	kidney
+SRR6900787	RNA-Seq	Homo sapiens	male	liver
+SRR6900788	RNA-Seq	Homo sapiens	male	lung
+SRR6900789	RNA-Seq	Homo sapiens	male	heart
+SRR6900790	RNA-Seq	Homo sapiens	male	kidney
+SRR6900791	RNA-Seq	Homo sapiens	male	liver
+SRR6900792	RNA-Seq	Homo sapiens	male	lung
+SRR6900793	RNA-Seq	Homo sapiens	male	heart
+SRR6900794	RNA-Seq	Homo sapiens	male	kidney
+SRR6900795	RNA-Seq	Homo sapiens	male	liver
+SRR6900796	RNA-Seq	Homo sapiens	male	lung

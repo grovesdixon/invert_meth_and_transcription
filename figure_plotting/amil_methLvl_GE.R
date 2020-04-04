@@ -13,8 +13,12 @@ gbm.dat = gbm.dat %>%
 
 ll=load('bioprojects/amillepora_PRJNA601565/meth_level/exonGbmLvl.Rdata')
 ll
+eg.dat_SET_ZERO = -8 #note that this is arbitrary
 eg.dat=eg.dat %>% 
-  dplyr::rename(l.fracMeth=lfracMeth)
+  dplyr::rename(l.fracMeth=lfracMeth) %>% 
+  mutate(l.fracMeth = if_else(l.fracMeth < eg.dat_SET_ZERO,
+                              eg.dat_SET_ZERO,
+                              l.fracMeth))
 
 
 # LOAD EXPRESSION DATA --------------------------------------------------
@@ -44,7 +48,7 @@ t.res=res %>%
 
 #wgbs
 Npm = sum(!is.na(eg.dat$l.fracMeth))
-PM.BREAKS = log(c(0.002, .015, .12,1), 2)
+PM.BREAKS = log(c(2^eg.dat_SET_ZERO, .02, .15,1), 2)
 pmHist = eg.dat %>% 
   ggplot(aes(x=l.fracMeth)) +
   geom_histogram() +
@@ -54,16 +58,22 @@ pmHist = eg.dat %>%
 
 #mbdseq
 Nmbd = sum(!is.na(gbm.dat$mbd.score))
+MBD.BREAKS = c(-2, 0, 2, 4)
 mbdHist = gbm.dat %>% 
   ggplot(aes(x=mbd.score)) +
   geom_histogram() +
+  scale_x_continuous(breaks = MBD.BREAKS,
+                     limits = c(MBD.BREAKS[1], MBD.BREAKS[length(MBD.BREAKS)])) +
   labs(title='MBD-seq', subtitle=paste(Nmbd, 'genes'),x='MBD-score')
 
 #mdRAD
 Nmr = sum(!is.na(gbm.dat$mrB))
+MR.BREAKS = c(-8, 0, 8)
 mrHist = gbm.dat %>% 
   ggplot(aes(x=mrB)) +
   geom_histogram() +
+  scale_x_continuous(breaks = MR.BREAKS,
+                     limits = c(MR.BREAKS[1], MR.BREAKS[length(MR.BREAKS)])) +
   labs(title='mdRAD', subtitle=paste(Nmr, 'genes'), x=bquote(log[2]~FPKM))
 
 histList = list(pmHist, mbdHist, mrHist)
@@ -127,17 +137,21 @@ eMdRADLvl=plot_scatter_pearsonCor_annotated(e.ge, 'mrB', 'mnGe', 'mdRAD GBM', 'e
 #PLOT BEST TOGETHER
 lvlList = list(wgbsLvl + scale_x_continuous(breaks = PM.BREAKS,
                                             labels = log2_to_percent),
-               mbdLvl + lims(x=c(-2.2,3)),
-               radLvl)
+               mbdLvl + scale_x_continuous(breaks = MBD.BREAKS,
+                                           limits = c(MBD.BREAKS[1], MBD.BREAKS[length(MBD.BREAKS)])),
+               radLvl + scale_x_continuous(breaks = MR.BREAKS,
+                                           limits = c(MR.BREAKS[1], MR.BREAKS[length(MR.BREAKS)])))
 
-plot_shared_x_y(pltList,
-                xlab='gbM level',
-                ylab='mRNA level',
-                relXlab = 1/15,
-                relYlab = 1/20)
+# plot_shared_x_y(lvlList,
+#                 xlab='gbM level',
+#                 ylab='mRNA level',
+#                 relXlab = 1/15,
+#                 relYlab = 1/20)
 
 
 # COMPARE WITH DIFFERENTIAL EXPRESSION ------------------------------------
+
+YLIM = c(0,1)
 
 gTissue = t.res %>% 
   left_join(gbm.dat, by='name') %>% 
@@ -148,68 +162,79 @@ eTissue = t.res %>%
   mutate(absl = abs(log2FoldChange))
   
 
+
+
 #plot for wgbs
-wgbs.t = plot_scatter_pearsonCor_annotated(gTissue, 'l.fracMeth', 'absl', 'WGBS', 'tissue difference', ALPHA=0.1, ylim=c(0,2)) +
+wgbs.t = plot_scatter_pearsonCor_annotated(gTissue, 'l.fracMeth', 'absl', 'WGBS', 'tissue difference', ALPHA=0.1, ylim=YLIM) +
   # geom_smooth(se=FALSE) +
   geom_smooth(method='lm', se=FALSE) +
   labs(title='WGBS') +
-  theme(plot.title = element_text(hjust=0.5))
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_x_continuous(breaks = PM.BREAKS,
+                     labels = log2_to_percent)
 
 #plot for mbd-seq
-mbd.t = plot_scatter_pearsonCor_annotated(gTissue, 'mbd.score', 'absl', 'MBD-seq GBM', 'tissue difference', ALPHA=0.1, ylim=c(0,2)) +
+mbd.t = plot_scatter_pearsonCor_annotated(gTissue, 'mbd.score', 'absl', 'MBD-seq GBM', 'tissue difference', ALPHA=0.1, ylim=YLIM) +
   # geom_smooth(se=FALSE) +
   geom_smooth(method='lm', se=FALSE) +
   labs(title='MBD-seq') +
   theme(plot.title = element_text(hjust=0.5))
 
 #plot for methylRAD
-mr.t = plot_scatter_pearsonCor_annotated(gTissue, 'mrB', 'absl', 'MethylRAD GBM', 'tissue difference', ALPHA=0.1, ylim=c(0,2)) +
+mr.t = plot_scatter_pearsonCor_annotated(gTissue, 'mrB', 'absl', 'MethylRAD GBM', 'tissue difference', ALPHA=0.1, ylim=YLIM) +
   # geom_smooth(se=FALSE) +
   geom_smooth(method='lm', se=FALSE) +
   labs(title='mdRAD') +
   theme(plot.title = element_text(hjust=0.5))
 
 #plot for wgbs exons
-wgbs.t=plot_scatter_pearsonCor_annotated(eTissue, 'l.fracMeth', 'absl', 'WGBS GBM', 'tissue difference', ALPHA=0.1, ylim=c(0,2)) +
+wgbs.t=plot_scatter_pearsonCor_annotated(eTissue, 'l.fracMeth', 'absl', 'WGBS GBM', 'tissue difference', ALPHA=0.1, ylim=YLIM) +
   # geom_smooth(se=FALSE) +
   geom_smooth(method='lm', se=FALSE) +
   labs(title='WGBS') +
-  theme(plot.title = element_text(hjust=0.5))
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_x_continuous(labels = log2_to_percent)
 
 #plot for mbeseq exons
-eMbdTip=plot_scatter_pearsonCor_annotated(eTissue, 'mbd.score', 'absl', 'MBD-score GBM', 'tissue difference', ALPHA=0.1, ylim=c(0,2)) +
+eMbdTip=plot_scatter_pearsonCor_annotated(eTissue, 'mbd.score', 'absl', 'MBD-score GBM', 'tissue difference', ALPHA=0.1, ylim=YLIM) +
   # geom_smooth(se=FALSE) +
   geom_smooth(method='lm', se=FALSE, color='red', lty=2)
 
 #plot for mdRAD
-eMdTip = plot_scatter_pearsonCor_annotated(eTissue, 'mrB', 'absl', 'mdRAD GBM', 'tissue difference', ALPHA=0.1, ylim=c(0,2)) +
+eMdTip = plot_scatter_pearsonCor_annotated(eTissue, 'mrB', 'absl', 'mdRAD GBM', 'tissue difference', ALPHA=0.1, ylim=YLIM) +
   # geom_smooth(se=FALSE) +
   geom_smooth(method='lm', se=FALSE, color='red', lty=2)
 
 
 #plot together 
-tipList = list(wgbs.t, mbd.t, mr.t)
+tipList = list(wgbs.t + scale_x_continuous(breaks = PM.BREAKS,
+                                           labels = log2_to_percent),
+               mbd.t + scale_x_continuous(breaks = MBD.BREAKS,
+                                            limits = c(min(MBD.BREAKS), max(MBD.BREAKS))),
+               mr.t + scale_x_continuous(breaks = MR.BREAKS,
+                                         limits = c(min(MR.BREAKS), max(MR.BREAKS))))
 plot_grid(plotlist = tipList, nrow=1)
 
 
 
 # ASSEMBLE TOGETHER -------------------------------------------------------
 
-PM.BREAKS = log(c(0.002, .015, .12,1), 2)
-MBD.BREAKS = c(-2, 0, 2, 4)
-MR.BREAKS = c(-6,0,6)
 
 histList2 = lapply(histList, function(x) return(x+theme(axis.title = element_blank(),
                                                         plot.title = element_text(hjust=0.5),
                                                         plot.subtitle = element_text(hjust=0.5))))
 lvlList2 = lapply(lvlList, function(x) return(x+theme(axis.title = element_blank(),
                                                       plot.title = element_blank())))
-tipList2 = lapply(tipList, function(x) return(x+theme(axis.title = element_blank(),
-                                                      plot.title = element_blank())))
+tipList2 = lapply(tipList, function(x) return(x + 
+                                                theme(axis.title = element_blank(),
+                                                      plot.title = element_blank()) +
+                                                scale_y_continuous(limits = c(0,1),
+                                                                   breaks = c(0, .25, .5, .75, 1),
+                                                                   labels = c('0.00', '0.25', '0.50', '0.75', ''))))
 
-hists = plot_grid(plotlist = histList2, nrow=1)
-lvls = plot_grid(plotlist = lvlList2, nrow=1)
-tips = plot_grid(plotlist = tipList2, nrow=1)
+hists = plot_grid(plotlist = histList2, nrow=1, labels = LETTERS[1:3])
+lvls = plot_grid(plotlist = lvlList2, nrow=1, labels = LETTERS[4:6])
+tips = plot_grid(plotlist = tipList2, nrow=1, labels = LETTERS[7:9])
 
 hy =  ggdraw() + draw_label('count', angle=90)
 ly =  ggdraw() + draw_label('mRNA level', angle=90)

@@ -1,0 +1,13 @@
+Status	60705_heartReclassedAsLiver_rna_dupsRemoved.bam	60705_kidney_rna_dupsRemoved.bam	60705_liver_rna_dupsRemoved.bam	60705_lung_rna_dupsRemoved.bam	61317_heart_rna_dupsRemoved.bam	61317_kidney_rna_dupsRemoved.bam	61317_liver_rna_dupsRemoved.bam	61317_lung_rna_dupsRemoved.bam	62789_heart_rna_dupsRemoved.bam	62789_kidney_rna_dupsRemoved.bam	62789_liver_rna_dupsRemoved.bam	62789_lung_rna_dupsRemoved.bam	62905_heart_rna_dupsRemoved.bam	62905_kidney_rna_dupsRemoved.bam	62905_liver_rna_dupsRemoved.bam	62905_lung_rna_dupsRemoved.bam
+Assigned	10638669	10183785	8320970	8925188	7679301	6658040	7751933	13128879	2191250	11057360	6624934	15239600	9708943	13693415	7688681	19539139
+Unassigned_Unmapped	885770	612283	694584	320398	646518	297427	618472	680509	600897	637857	722733	728799	892474	798487	856454	1300201
+Unassigned_MappingQuality	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_MultiMapping	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Secondary	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NonSplit	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NoFeatures	1918920	2185057	1561755	1677766	1333584	1437552	1687105	2194460	599433	2385345	1491844	2594492	1731202	2710436	2116435	3416258
+Unassigned_Overlapping_Length	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Ambiguity	1361361	1290302	1073482	1063637	958202	878342	1015989	1465876	266494	1402884	938677	1619572	1138384	1682952	948434	2134720

@@ -1,0 +1,17 @@
+Individual	sex	tissue
+macacYN07.314	male	heart
+macacYN07.314	male	kidney
+macacYN07.314	male	liver
+macacYN07.314	male	lung
+macacYN07.315	male	heart
+macacYN07.315	male	kidney
+macacYN07.315	male	liver
+macacYN07.315	male	lung
+macacYN07.317	male	heart
+macacYN07.317	male	kidney
+macacYN07.317	male	liver
+macacYN07.317	male	lung
+macacYN07.330	female	heart
+macacYN07.330	female	kidney
+macacYN07.330	female	liver
+macacYN07.330	female	lung

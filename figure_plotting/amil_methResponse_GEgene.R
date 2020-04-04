@@ -3,7 +3,7 @@ source('invert_meth_ge_functions.R')
 
 # LOAD EXPRESSION DATA --------------------------------------------------
 
-ll=load('bioprojects/amillepora_PRJNA601565/rna_results/previous/genotype_results.Rdata')
+ll=load('bioprojects/amillepora_PRJNA601565/rna_results/genotype_results.Rdata')
 ll
 g.res=res %>% 
   data.frame() %>% 
@@ -11,7 +11,7 @@ g.res=res %>%
   dplyr::select(name, log2FoldChange, pvalue, padj) %>% 
   as_tibble()
 
-ll=load('bioprojects/amillepora_PRJNA601565/rna_results/previous/tissue_results.Rdata')
+ll=load('bioprojects/amillepora_PRJNA601565/rna_results/tissue_results.Rdata')
 ll
 t.res=res %>% 
   data.frame() %>% 

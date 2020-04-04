@@ -1,0 +1,17 @@
+Run	Assay Type	Organism	sex	tissue
+SRR6900765	RNA-Seq	Pan troglodytes	male	heart
+SRR6900766	RNA-Seq	Pan troglodytes	male	kidney
+SRR6900767	RNA-Seq	Pan troglodytes	male	liver
+SRR6900768	RNA-Seq	Pan troglodytes	male	lung
+SRR6900769	RNA-Seq	Pan troglodytes	male	heart
+SRR6900770	RNA-Seq	Pan troglodytes	male	kidney
+SRR6900771	RNA-Seq	Pan troglodytes	male	liver
+SRR6900772	RNA-Seq	Pan troglodytes	male	lung
+SRR6900773	RNA-Seq	Pan troglodytes	female	heart
+SRR6900774	RNA-Seq	Pan troglodytes	female	kidney
+SRR6900775	RNA-Seq	Pan troglodytes	female	liver
+SRR6900776	RNA-Seq	Pan troglodytes	female	lung
+SRR6900777	RNA-Seq	Pan troglodytes	male	heart
+SRR6900778	RNA-Seq	Pan troglodytes	male	kidney
+SRR6900779	RNA-Seq	Pan troglodytes	male	liver
+SRR6900780	RNA-Seq	Pan troglodytes	male	lung
