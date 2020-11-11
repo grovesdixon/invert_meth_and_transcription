@@ -26,7 +26,7 @@ do echo "\
 bowtie2 -x $GENOME_PATH -1 ${file/_2.trim}_1.trim -2 ${file} --local -p 6 -S ${file/_2.trim}.sam" >> mappe
 done
 
-launcher_creator.py -n mapSub -j mappe -q normal -N 4 -w 3 -a $allo -t 24:00:00
+launcher_creator.py -n mapHumanTissRNA -j mappe -q normal -N 3 -w 6 -a $allo -t 24:00:00
 #with -p 6 for bowtie, wayness of 6 seems good (36 total out of 48, leaving some extra memory), assuming 12 pairs of .trim files to map, 2 nodes lets them all map at once
 #This sometimes finishes as fast as a couple hours, but can take much longer for large .trim files, could be fancy to set the amount of time requested based on the read counts
 

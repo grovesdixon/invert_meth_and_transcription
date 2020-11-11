@@ -19,12 +19,12 @@ module load bowtie
 module load samtools
 >runBismark
 for file in *.trim
-do echo "bismark --bowtie2 --multicore 4 --genome $GENOME_FOLDER $file" >> runBismark
+do echo "bismark --bowtie2 --score_min L,0,-0.6 -N 1 --multicore 5 --genome $GENOME_FOLDER $file" >> runBismark
 done
 
 
 
-launcher_creator.py -n runBismarkMacac -j runBismark -q normal -N 8 -w 2 -a $allo -t 30:00:00 -e $email
+launcher_creator.py -n waynessTestHumanTissue -j runBismark -q normal -N 1 -w 2 -a $allo -t 12:00:00 -e $email
 
 
 
@@ -32,10 +32,10 @@ launcher_creator.py -n runBismarkMacac -j runBismark -q normal -N 8 -w 2 -a $all
 module load samtools
 >dedup
 for file in *_bismark_bt2.bam 
-do echo "/work/02260/grovesd/stampede2/Bismark/deduplicate_bismark --single --bam $file" >> dedup
+do echo "deduplicate_bismark --single --bam $file" >> dedup
 done
 
-launcher_creator.py -n dedupChimp -j dedup -q normal -N 4 -w 4 -a $allo -t 16:00:00
+launcher_creator.py -n dedupMac -j dedup -q normal -N 4 -w 1 -a $allo -t 12:00:00 -e $email
 
 #look at results
 grep "Total count of deduplicated leftover sequences" *.deduplication_report.txt
@@ -49,7 +49,7 @@ do echo "bismark_methylation_extractor --multicore 4 $file --merge_non_CpG --sca
 done
 
 #note wayness of 1 seems better here because so many temp files are output for scaffolds during cov writing 
-launcher_creator.py -n extractHumanQuick -j extractMeth -q normal -N 2 -w 1 -a $allo -e $email -t 2:00:00
+launcher_creator.py -n extrMac -j extractMeth -q normal -N 4 -w 4 -a $allo -e $email -t 24:00:00
 
 
 
@@ -75,7 +75,7 @@ wc -l *.trim |\
  grep -v total > trimmed_read_counts.tsv &
 
 >all_bisulfite_reports.txt
-for file in *PE_report.txt
+for file in *bt2_*_report.txt
 do echo -e "${file}....\n" >> all_reports.txt; cat $file >> all_bisulfite_reports.txt
 echo -e "\n\n---------------------------------------------------" >> all_bisulfite_reports.txt
 done
@@ -83,8 +83,8 @@ done
 
 #TOTAL READS GOING INTO BISMARK
 >bismark_starting_reads.tsv
-for file in *PE_report.txt
-do count=$(grep "Sequence pairs analysed in total" $file | cut -f 2)
+for file in *bt2_*_report.txt
+do count=$(grep "analysed in total" $file | cut -f 2)
 sample=${file/.trim_bismark_bt2_SE_report.txt/}
 echo -e "${sample}\t${count}\tstartingCount" >> bismark_starting_reads.tsv
 done
@@ -126,3 +126,149 @@ done
 
 #assemble results
 cat bismark_starting_reads.tsv bismark_mapped_counts.tsv bismark_dedup_count.txt > pipeline_counts.txt 
+
+
+
+#############################################
+######## METHYLATION LEVEL BASIC WAY ########
+#############################################
+
+#choose the genome you're working with
+source /work/02260/grovesd/lonestar/myReferences/humanReference.sh   #human
+source /work/02260/grovesd/lonestar/myReferences/chimpReference.sh   #chimp
+source /work/02260/grovesd/lonestar/myReferences/macaqueRference.sh  #macaque
+
+
+#first concatenate the covs adding file name as 6th column
+>all_covs.tsv
+for file in *.cov
+do echo "${file}..."
+awk -v FILE="$file" '{print $0"\t"FILE}' $file >> all_covs.tsv
+done
+
+
+#SPLIT BY CHROMOSOME
+
+#get scaffolds
+grep ">" $GENOME_PATH | sed 's/>//' | cut -f 1 -d " " > uchrs.txt
+
+#split cov
+mkdir splitCovs
+>doSplits
+while read chr
+do modChr=${chr/|/_}
+echo "grep -w \"^${chr}\" all_covs.tsv > splitCovs/${modChr}_sub.cov" >> doSplits
+done < uchrs.txt
+
+launcher_creator.py -n doSplits -j doSplits -q development -N 1 -w 25 -a $allo -t 02:00:00
+
+
+#check
+echo $promoterWindowFile
+echo $geneWindowFile
+echo $exonWindowFile
+
+
+#get stats
+>getBasic
+for file in *_sub.cov
+do echo "basic_methylation_from_bed.R --cov $file --bed $promoterWindowFile --o ${file/_sub.cov/}.promoter.basicStats" >>getBasic
+ echo "basic_methylation_from_bed.R --cov $file --bed $geneWindowFile --o ${file/_sub.cov/}.gene.basicStats" >>getBasic
+done
+
+launcher_creator.py -n basicMac -j getBasic -q normal -N 2 -w 12 -a $allo -e $email -t 4:00:00
+
+
+#ASSEMBLE RESULTS
+
+#for promoters
+PREFIX="promoter"
+ls *${PREFIX}*.basicStats > ${PREFIX}_subfiles.txt
+head -n1 `head -n 1 ${PREFIX}_subfiles.txt` > ${PREFIX}_basicStatsBed.tsv
+while read subfile
+do tail -n +2 $subfile >> ${PREFIX}_basicStatsBed.tsv
+done < ${PREFIX}_subfiles.txt
+
+#for genes
+PREFIX="gene"
+ls *${PREFIX}*.basicStats > ${PREFIX}_subfiles.txt
+head -n1 `head -n 1 ${PREFIX}_subfiles.txt` > ${PREFIX}_basicStatsBed.tsv
+while read subfile
+do tail -n +2 $subfile >> ${PREFIX}_basicStatsBed.tsv
+done < ${PREFIX}_subfiles.txt
+
+
+###########################################
+########## METHYLKIT FOR WINDOWS ##########
+###########################################
+#This also appears in the benchmarking walkthough
+#modified here to get more significant differences
+
+#choose the genome and treatment table you're working with
+
+#HUMAN
+source /work/02260/grovesd/lonestar/myReferences/humanReference.sh   #human
+TREATMENT_TABLE=bisulfite_treatment_table.txt
+
+#CHIMP
+source /work/02260/grovesd/lonestar/myReferences/chimpReference.sh   #chimp
+TREATMENT_TABLE=bisulfite_treatment_table.txt
+TREATMENT_TABLE=male_v_female.txt                                    #chimp male vs chimp female all tissues
+TREATMENT_TABLE=heat_v_liver.txt                                     #chimp heat v liver all genotypes
+
+
+#MACAC
+source /work/02260/grovesd/lonestar/myReferences/macaqueRference.sh  #macaque
+TREATMENT_TABLE=bisulfite_treatment_table.txt
+TREATMENT_TABLE=male_v_female.txt                                    #macaque male vs macaque female all tissues
+TREATMENT_TABLE=heat_v_liver.txt                                     #macaque heat v liver all genotypes
+
+
+
+
+
+
+
+
+##NOTE, using NCORES=12 cores here sometimes caused calculateDiffMeth() to error out with Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :0 (non-NA) cases
+NCORES=1  
+LOWCOUNT=0
+MINPROP=0.10
+
+#check
+echo $geneWindowFile
+echo $promoterWindowFile
+echo $window500bpFile
+
+
+>runMethylKitWindows
+
+#RUN FOR GENES
+echo "\
+methylKitWindowsV2.R -m $TREATMENT_TABLE -N $NCORES --prefix gene_change --minimum_depth $LOWCOUNT -a $GENOME_PATH --windows_bed $geneWindowFile --min_prop_group $MINPROP" >> runMethylKitWindows
+
+#RUN FOR PROMOTERS
+echo "\
+methylKitWindowsV2.R -m $TREATMENT_TABLE -N $NCORES --prefix promoter_change --minimum_depth $LOWCOUNT -a $GENOME_PATH --windows_bed $promoterWindowFile --min_prop_group $MINPROP" >> runMethylKitWindows
+
+#RUN FOR 500 BP WINDOWS
+echo "\
+methylKitWindowsV2.R -m $TREATMENT_TABLE -N $NCORES --prefix 500bpWindows_change --minimum_depth $LOWCOUNT -a $GENOME_PATH --windows_bed $window500bpFile --min_prop_group $MINPROP" >> runMethylKitWindows
+
+
+launcher_creator.py -n windowHum -j runMethylKitWindows -q development -N 2 -w 1 -a $allo -e $email -t 2:00:00
+
+#------------------------------------------------#
+#--------- GET CLOSEST GENE FOR WINDOWS ---------#
+#------------------------------------------------#
+
+#genome source should be same as above
+>getCloseGenes
+for windowRes in *Windows_change_significant.tsv
+do outName=${windowRes/.tsv/}_closeGeneDistances.tsv
+echo "closeBound_upDown_gene_fromBed.R --g $GFF_PATH --b $windowRes --o $outName" >> getCloseGenes
+done
+
+
+
+

@@ -1,0 +1,17 @@
+file	CpG.pct	CHG.pct	CHH.pct	CN_or_CHH
+YN07-314_heart_catted_1.trim_bismark_bt2_SE_report.txt	68.8%	0.7%	0.7%	
+YN07-314_kidney_catted_1.trim_bismark_bt2_SE_report.txt	72.3%	1.0%	1.2%	
+YN07-314_liver_catted_1.trim_bismark_bt2_SE_report.txt	70.2%	0.7%	0.8%	
+YN07-314_lung_catted_1.trim_bismark_bt2_SE_report.txt	70.6%	0.8%	0.9%	
+YN07-315_heart_catted_1.trim_bismark_bt2_SE_report.txt	68.2%	0.6%	0.6%	
+YN07-315_kidney_catted_1.trim_bismark_bt2_SE_report.txt	73.5%	0.7%	0.7%	
+YN07-315_liver_catted_1.trim_bismark_bt2_SE_report.txt	72.1%	0.8%	1.0%	
+YN07-315_lung_catted_1.trim_bismark_bt2_SE_report.txt	70.0%	0.7%	0.7%	
+YN07-317_heart_catted_1.trim_bismark_bt2_SE_report.txt	70.1%	0.7%	0.7%	
+YN07-317_kidney_catted_1.trim_bismark_bt2_SE_report.txt	71.4%	0.7%	0.7%	
+YN07-317_liver_catted_1.trim_bismark_bt2_SE_report.txt	70.1%	0.7%	0.7%	
+YN07-317_lung_catted_1.trim_bismark_bt2_SE_report.txt	71.4%	0.8%	0.9%	
+YN07-330_heart_catted_1.trim_bismark_bt2_SE_report.txt	70.1%	0.9%	1.1%	
+YN07-330_kidney_catted_1.trim_bismark_bt2_SE_report.txt	72.3%	0.8%	0.9%	
+YN07-330_liver_catted_1.trim_bismark_bt2_SE_report.txt	71.1%	0.8%	0.8%	
+YN07-330_lung_catted_1.trim_bismark_bt2_SE_report.txt	70.1%	0.7%	0.8%	

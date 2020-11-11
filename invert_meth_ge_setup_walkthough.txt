@@ -113,7 +113,7 @@ $file" >> trimpe
 done
 
 
-launcher_creator.py -n trimpe -j trimpe -a $allo -e $email -q normal -t 12:00:00 -N 4 -w 40
+launcher_creator.py -n trimHumanRNA -j trimpe -a $allo -e $email -q normal -t 12:00:00 -N 1 -w 18
 sbatch trimpe.slurm
 
 
@@ -199,6 +199,8 @@ module load bedtools
 fasta_sequence_characters.py -fa $GENOME > chrLengths.txt
 bedtools makewindows -g chrLengths.txt -w 500 | awk 'BEGIN{OFS="\t"}{print $0,$1"-"$2"-"$3}' > windowBoundaries_500bp.bed
 
+#1Kb windows around genes
+windows_around_genes_from_gff.R --i $GFF --o 1kb_around_genes.bed
 
 
 
@@ -215,7 +217,8 @@ geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
 promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
 tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
 window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
-window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/aiptaisiaReference.sh
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed
+aroundGeneWindowFile=${GENOME_FOLDER}/1kb_around_genes.bed" > /work/02260/grovesd/lonestar/myReferences/aiptaisiaReference.sh
 
 
 #------ AMILLEPORA ------#
@@ -231,7 +234,8 @@ geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
 promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
 tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
 window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
-window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/amilleporaReference.sh
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed
+aroundGeneWindowFile=${GENOME_FOLDER}/1kb_around_genes.bed" > /work/02260/grovesd/lonestar/myReferences/amilleporaReference.sh
 
 
 
@@ -249,11 +253,12 @@ geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
 promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
 tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
 window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
-window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/bumbleBeeReference.sh
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed
+aroundGeneWindowFile=${GENOME_FOLDER}/1kb_around_genes.bed" > /work/02260/grovesd/lonestar/myReferences/bumbleBeeReference.sh
 
 
 #---- MATERNAL BEE ----#
-
+GENOME_FOLDER=/work/02260/grovesd/lonestar/Ceratina_calcarata_genome_MIN500
 echo "\
 GENOME_PATH=/work/02260/grovesd/lonestar/Ceratina_calcarata_genome_MIN500/GCF_001652005.1_ASM165200v1_genomic_MIN500.fasta
 GENOME_FOLDER=/work/02260/grovesd/lonestar/Ceratina_calcarata_genome_MIN500
@@ -264,7 +269,8 @@ geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
 promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
 tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
 window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
-window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/maternalBeeReference.sh
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed
+aroundGeneWindowFile=${GENOME_FOLDER}/1kb_around_genes.bed" > /work/02260/grovesd/lonestar/myReferences/maternalBeeReference.sh
 
 
 #---- ROBUST ANT ----#
@@ -350,7 +356,8 @@ geneWindowFile=${GENOME_FOLDER}/geneBoundaries.bed
 promoterWindowFile=${GENOME_FOLDER}/promoterBoundaries.bed
 tssWindowFile=${GENOME_FOLDER}/tssBoundaries.bed
 window1KbFile=${GENOME_FOLDER}/windowBoundaries_1kb.bed
-window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed" > /work/02260/grovesd/lonestar/myReferences/honeybeeReference.sh
+window500bpFile=${GENOME_FOLDER}/windowBoundaries_500bp.bed
+aroundGeneWindowFile=${GENOME_FOLDER}/1kb_around_genes.bed" > /work/02260/grovesd/lonestar/myReferences/honeybeeReference.sh
 
 
 #----- TERMITE -----#

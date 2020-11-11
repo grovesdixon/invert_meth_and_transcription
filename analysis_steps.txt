@@ -4,6 +4,25 @@
 
 #plot pipeline counts and assemble tables
 	figure_plotting/pipeline_read_counts_all.R
+
+#plot expected gbM-GE associations for A.millepora
+	figure_plotting/amil_meth_GE.R
+		plots histograms for gbM level for 3 assays
+		plots scatterplots for GE level and GE differences with gbM level
+		plots scatterplots for gbM differences and GE differences
+		plots same for promoter differences
+		looks into changes in gbM and GE based on gbM class (methylated or unmethylated genes)
+
+#plot expected gbM-GE associations for other species
+	figure_plotting/plot_meth_ge_figs.R
+		plots summary cladogram, histograms, and study descriptions
+		explores potential patterns with promoter methylation and by gbM level (nothing clear going on here)
+		plots scatterplots for GE level and GE differences against gbM level
+		plots scatterplots for GE differences and gbM differences
+		
 	
+
+
+
 
 

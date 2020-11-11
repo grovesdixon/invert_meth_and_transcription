@@ -1,0 +1,2 @@
+file	CpG.pct	CHG.pct	CHH.pct	CN_or_CHH
+*SE_report.txt				

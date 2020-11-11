@@ -1,0 +1,3 @@
+*bt2_*_report.txt		startingCount
+*_SE_report.txt		mappedCount
+*.deduplication_report.txt		dedupCount

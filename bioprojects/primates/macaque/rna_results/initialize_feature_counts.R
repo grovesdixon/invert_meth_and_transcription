@@ -54,7 +54,7 @@ sra = read_excel('metadata/Blake_SraRunTable.xlsx') %>%
   column_to_rownames('sample')
 
 #set as coldata
-coldata = sra[sample,]
+coldata = sra[colnames(counts),]
 coldata
 dim(coldata)
 sum(rownames(coldata)==colnames(counts))
@@ -192,17 +192,8 @@ outlierNames
 print(paste(nSamples, "samples were kept"))
 
 
-#replot heatmap without outlier
-rld.df = rld.df[, !colnames(rld.df) %in% outlierNames]
-coldata = coldata[!rownames(coldata) %in% outlierNames, ]
-pheatmap(cor(rld.df), labels_col= coldata$Individual, labels_row = coldata$tissue)
 
-
-
-#save the outlier names so you can optionally remove them in other analyses
-# save(outlierNames, file = 'datasets/outliers.Rdata')
-counts=counts[,!colnames(counts) %in% outlierNames]
-coldata=coldata[!coldata$run %in% outlierNames,]
+# OUTPUT ------------------------------------------------------------------
 dim(counts)
 dim(coldata)
 deseqInfile=paste(rnaDir, 'deseqInput.Rdata', sep='')

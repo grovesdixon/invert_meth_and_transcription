@@ -24,7 +24,7 @@ subset_fastaV2.py -fa Homo_sapiens.GRCh38.dna.toplevel.fa -i sub.txt -o Homo_sap
 GENOME_FOLDER=/work/02260/grovesd/lonestar/human_genome
 echo "\
 GENOME_FOLDER=/work/02260/grovesd/lonestar/human_genome
-GENOME_PATH=${GENOME_FOLDER}/Homo_sapiens.GRCh38.dna.toplevel.fa
+GENOME_PATH=${GENOME_FOLDER}/Homo_sapiens.GRCh38.chrsOnly.fasta
 GFF_PATH=${GENOME_FOLDER}/Homo_sapiens.GRCh38.99.gff3
 GENE_ID=ID
 exonWindowFile=${GENOME_FOLDER}/cdsBoundaries.bed
@@ -96,8 +96,8 @@ echo "bismark_genome_preparation /work/02260/grovesd/lonestar/macaca_genome" >> 
 
 #------- MAKING WINDOWS:
 #REPEAT FOR EACH REFERENCE
-GFF="GCF_000151625.1_ASM15162v1_genomic.gff"
-GENOME="silkwormRef_longerThan500.fasta"
+GFF="Homo_sapiens.GRCh38.99.gff3"
+GENOME="Homo_sapiens.GRCh38.chrsOnly.fasta"
 #generate gene windows
 gff_to_bed4.py -gff $GFF -feature gene -IDstring ID -o geneBoundaries.bed
 
@@ -117,7 +117,6 @@ bedtools makewindows -g chrLengths.txt -w 1000 | awk 'BEGIN{OFS="\t"}{print $0,$
 
 #generate 500 bp windows
 module load bedtools
-fasta_sequence_characters.py -fa $GENOME > chrLengths.txt
 bedtools makewindows -g chrLengths.txt -w 500 | awk 'BEGIN{OFS="\t"}{print $0,$1"-"$2"-"$3}' > windowBoundaries_500bp.bed
 
 
@@ -161,7 +160,7 @@ do echo "cutadapt \
 $file > ${file}_trimlog.txt" >> trimse
 done
 
-launcher_creator.py -n trimse -j trimse -q normal -N 2 -w 24 -a $allo -e $email -t 12:00:00
+launcher_creator.py -n trimHumanBisulfite -j trimse -q normal -N 1 -w 35 -a $allo -e $email -t 12:00:00
 
 
 

@@ -188,6 +188,7 @@ for file in *_sub.cov
 do echo "basic_methylation_from_bed.R --cov $file --bed $promoterWindowFile --o ${file/_sub.cov/}.promoter.basicStats" >>getBasic
  echo "basic_methylation_from_bed.R --cov $file --bed $exonWindowFile --o ${file/_sub.cov/}.exon.basicStats" >>getBasic
  echo "basic_methylation_from_bed.R --cov $file --bed $geneWindowFile --o ${file/_sub.cov/}.gene.basicStats" >>getBasic
+ echo "basic_methylation_from_bed.R --cov $file --bed $aroundGeneWindowFile --o ${file/_sub.cov/}.around.basicStats" >>getBasic
 done
 
 launcher_creator.py -n basicSty -j getBasic -q normal -N 1 -w 24 -a $allo -e $email -t 5:00:00
@@ -241,8 +242,9 @@ source /work/02260/grovesd/lonestar/myReferences/termiteReference.sh      #termi
 
 ##NOTE, using NCORES=12 cores here sometimes caused calculateDiffMeth() to error out with Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :0 (non-NA) cases
 NCORES=1  
-LOWCOUNT=3
-MINPROP=0.75
+LOWCOUNT=2
+MINPROP=1.0
+TREATMENT_TABLE=adult_v_larvae_treat_table.txt
 TREATMENT_TABLE=bisulfite_treat_table.txt
 
 #check

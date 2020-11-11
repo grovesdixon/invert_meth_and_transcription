@@ -40,6 +40,7 @@ counts=cc[means>cut,]
 #SET UP COLDATA
 sample = colnames(counts)
 
+
 #read in data from sra
 sra = read_excel('metadata/Blake_SraRunTable.xlsx') %>% 
   mutate(tissue = if_else(tissue=='heart (later reclassified as liver)',
@@ -165,44 +166,7 @@ par(mar = c(0,5,2,0))
 plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
 
 
-#=====================================================================================
-#
-#  Code chunk 6
-# 
-#=====================================================================================
-
-#Remove outliers by setting a branch cut threshold
-# Plot a line to show the cut
-cut.height = 200
-plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
-abline(h = cut.height, col = "red", lty = 2);
-
-# Determine cluster under the line
-clust = cutreeStatic(sampleTree, cutHeight = cut.height, minSize = 4)
-table(clust)
-# clust 1 contains the samples we want to keep.
-keepSamples = (clust==1)
-keepSampleNames = rownames(datExpr0)[keepSamples]
-outlierNames = rownames(datExpr0)[clust==0]
-datExpr = datExpr0[keepSamples, ]
-nGenes = ncol(datExpr)
-nSamples = nrow(datExpr) #number of samples left after outlier removal
-print(paste(length(outlierNames), "samples were flagged as outliers and removed:"))
-outlierNames
-print(paste(nSamples, "samples were kept"))
-
-
-#replot heatmap without outlier
-rld.df = rld.df[, !colnames(rld.df) %in% outlierNames]
-coldata = coldata[!rownames(coldata) %in% outlierNames, ]
-pheatmap(cor(rld.df), labels_col= coldata$Individual, labels_row = coldata$tissue)
-
-
-
-#save the outlier names so you can optionally remove them in other analyses
-# save(outlierNames, file = 'datasets/outliers.Rdata')
-counts=counts[,!colnames(counts) %in% outlierNames]
-coldata=coldata[!coldata$run %in% outlierNames,]
+#output
 dim(counts)
 dim(coldata)
 deseqInfile=paste(rnaDir, 'deseqInput.Rdata', sep='')
