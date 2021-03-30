@@ -632,7 +632,7 @@ for (n in dat_names){
 #assemble multiplanel
 ry = 1/30
 rx = 1/15
-Mgbm_response = assemble_row_panels(Mgbm_response_plotlist, 2, 'GBM change', 'expression change', ry, rx)
+Mgbm_response = assemble_row_panels(Mgbm_response_plotlist, 2, 'GBM difference', 'expression difference', ry, rx)
 Mgbm_response
 
 
@@ -686,7 +686,7 @@ for (n in dat_names){
 #assemble multiplanel
 ry = 1/30
 rx = 1/15
-promoter_response = assemble_row_panels(promoter_response_plotlist, 2, 'promoter methylation change', 'expression change', ry, rx)
+promoter_response = assemble_row_panels(promoter_response_plotlist, 2, 'promoter methylation difference', 'expression difference', ry, rx)
 promoter_response
 
 ######### PLOT ALL GENES WITH VOLCANOS

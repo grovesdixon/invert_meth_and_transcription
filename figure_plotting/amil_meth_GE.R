@@ -259,6 +259,9 @@ plot_grid(plts, xlab, nrow=2, rel_heights = c(1,1/20))
 
 
 # DIFFERENTIAL METH AND GE FOR GBM-----------------------------------
+#Note, for all the comparisons below, there is code to use either genotype or polyp type as contrast
+#publication uses tissue type to better resemble the contrasts in other studies. Running code as is 
+#will make the polyp type comparisons.
 
 #LOAD GBM RESULTS FROM BENCHMARKING STUDY
 ll=load('bioprojects/amillepora_PRJNA601565/meth_response/other_methods/tissue_gbm_response.Rdata')
@@ -277,7 +280,7 @@ merge_meth_and_ge = function(gbm.df, res){
 
 
 #pick the contrast to look at
-ge.gbm = merge_meth_and_ge(g.gbm.dat, g.res) #genotype (big differences, only mdRAD correlates)
+# ge.gbm = merge_meth_and_ge(g.gbm.dat, g.res) #genotype (big differences, only mdRAD correlates)
 ge.gbm = merge_meth_and_ge(t.gbm.dat, t.res) #tissue
 
 ##### BUILD VOLCANOS
@@ -400,7 +403,7 @@ ll=load('bioprojects/amillepora_PRJNA601565/meth_response/other_methods/genotype
 ll  
 
 #pick contrast to plot
-ge.prom = merge_meth_and_ge(g.dat, g.res) #genotype
+# ge.prom = merge_meth_and_ge(g.dat, g.res) #genotype
 ge.prom = merge_meth_and_ge(t.dat, t.res) #tissue
 
 ##### BUILD VOLCANOS
@@ -511,7 +514,8 @@ xlab = ggdraw() + draw_label('promoter methylation difference')
 plot_grid(vplts, splts, xlab, nrow = 3, rel_heights = c(12,12,1))
 
 
-#plot only 
+#plot only the scatterplots
+plot_grid(splts, xlab, nrow = 2, rel_heights = c(16,1))
 
 
 # SEESAWS -----------------------------------------------------------------

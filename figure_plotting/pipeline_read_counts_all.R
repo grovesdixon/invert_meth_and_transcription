@@ -66,5 +66,10 @@ pp<-sdat %>%
 l=cowplot::get_legend(pp)
 plot_grid(lp, pp+theme(legend.position = 'none'), l, nrow=1, rel_widths = c(1,1,0.75))
 
-cdat %>% 
-  filter(!grepl('__', geneID))
+
+#write out
+unique(sdat$stat)
+sdat %>% 
+  pivot_wider(id_cols = c('run', 'bioproject'),
+              names_from = stat,
+              values_from = value)

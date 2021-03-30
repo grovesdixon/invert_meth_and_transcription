@@ -1,11 +1,11 @@
 #analysis_steps.txt
 
-#Run through both pipelines on cluster to prepare data
+#Use walkthough text files to process data on cluster
+	invert_meth_ge_setup_walkthough.txt
+	invert_meth_ge_bisulfite_walkthough.txt
+	invert_meth_ge_RNAseq_walkthough.txt
 
-#plot pipeline counts and assemble tables
-	figure_plotting/pipeline_read_counts_all.R
-
-#plot expected gbM-GE associations for A.millepora
+#plot gbM-GE associations for A.millepora
 	figure_plotting/amil_meth_GE.R
 		plots histograms for gbM level for 3 assays
 		plots scatterplots for GE level and GE differences with gbM level
@@ -13,7 +13,7 @@
 		plots same for promoter differences
 		looks into changes in gbM and GE based on gbM class (methylated or unmethylated genes)
 
-#plot expected gbM-GE associations for other species
+#plot gbM-GE associations for other species
 	figure_plotting/plot_meth_ge_figs.R
 		plots summary cladogram, histograms, and study descriptions
 		explores potential patterns with promoter methylation and by gbM level (nothing clear going on here)
