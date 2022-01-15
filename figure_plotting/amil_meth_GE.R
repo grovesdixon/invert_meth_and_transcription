@@ -42,7 +42,7 @@ t.res=res %>%
   dplyr::select(name, log2FoldChange, pvalue, padj) %>% 
   as_tibble()
 
-
+plot_volcano_general(t.res) 
 
 # PLOT HISTOGRAMS ---------------------------------------------------------
 
